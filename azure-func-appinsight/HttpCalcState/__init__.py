@@ -1,13 +1,20 @@
 import logging
 
 import azure.functions as func
+from azure.cosmos import CosmosClient
 
-from .. import constants
 from ..HttpGetExceptions.handler_exception import *
 from ..HttpGetAvailability.handler_availability import *
 
+from .. import constants
+
 TRH_COUNT_EXCEPTION = 'count_exception'
 TRH_AVAILABILITY_FAILED = 'availability_failed'
+
+client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
+
+database = client.get_database_client(constants.DB_DATABASE_ID)
+container = database.get_container_client(constants.DB_CONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
