@@ -5,8 +5,8 @@ from azure.cosmos import exceptions, CosmosClient, PartitionKey
 from .. import family
 
 
-endpoint = "https://localhost:8081"
-key = 'C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw=='
+endpoint = "https://hu-todss.documents.azure.com:443/"
+key = 'K80J9F3LT7suCP8gXtj7wgYqcoFtZsejj2zLv56hyys8PmhAU9YMaSTf2P5s6jCanzfKJ0nG4s1LOINbKbXrng=='
 database_id = 'test'
 container_id = 'test'
 client = CosmosClient(endpoint, key)
