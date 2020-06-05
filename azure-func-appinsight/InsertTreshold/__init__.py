@@ -16,12 +16,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     req_body        = family.generateid(req.get_json())
     
-    tresholdAmount  = req_body.get('tresholdAmount')
-    tresholdName    = req_body.get('tresholdName')
+    thresholdAmount  = req_body.get('thresholdAmount')
+    thresholdName    = req_body.get('thresholdName')
     tool            = req_body.get('tool')
-    instantiename   = req_body.get('instantiename')
+    instancename   = req_body.get('instancename')
     try:
-        if tresholdAmount and tresholdName and tool and instantiename :
+        if thresholdAmount and thresholdName and tool and instancename :
             result = container.create_item(body=req_body)
         else:
             result = f"Not every condition is provided"
