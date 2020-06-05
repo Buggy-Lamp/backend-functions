@@ -19,9 +19,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     thresholdAmount  = req_body.get('thresholdAmount')
     thresholdName    = req_body.get('thresholdName')
     tool            = req_body.get('tool')
-    instancename   = req_body.get('instancename')
+    instanceName   = req_body.get('instanceName')
     try:
-        if thresholdAmount and thresholdName and tool and instancename :
+        if thresholdAmount and thresholdName and tool and instanceName :
             result = container.create_item(body=req_body)
         else:
             result = f"Not every condition is provided"
