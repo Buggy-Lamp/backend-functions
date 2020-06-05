@@ -14,3 +14,4 @@ DB_ENDPOINT = "https://hu-todss.documents.azure.com/"
 DB_KEY = 'K80J9F3LT7suCP8gXtj7wgYqcoFtZsejj2zLv56hyys8PmhAU9YMaSTf2P5s6jCanzfKJ0nG4s1LOINbKbXrng=='
 DB_DATABASE_ID = 'test'
 DB_CONTAINER_ID = 'test'
+DB_LAMPCONTAINER_ID = 'LampContainer'
