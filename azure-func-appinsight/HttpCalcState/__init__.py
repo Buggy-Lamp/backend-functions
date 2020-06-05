@@ -15,10 +15,14 @@ TRH_AVAILABILITY_FAILED = 'availability_failed'
 
 load_dotenv()
 
-client = CosmosClient(os.getenv("DB_ENDPOINT"), os.getenv("DB_KEY"))
+# client = CosmosClient(os.getenv("DB_ENDPOINT"), os.getenv("DB_KEY"))
+#
+# database = client.get_database_client(os.getenv("DB_DATABASE_ID"))
+# container = database.get_container_client(os.getenv("DB_CONTAINER_ID"))
+client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
 
-database = client.get_database_client(os.getenv("DB_DATABASE_ID"))
-container = database.get_container_client(os.getenv("DB_CONTAINER_ID"))
+database = client.get_database_client(constants.DB_DATABASE_ID)
+container = database.get_container_client(constants.DB_CONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
