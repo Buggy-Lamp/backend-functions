@@ -28,7 +28,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     except:
         result = f"The id is already in use or the database is not excepting it in a other way"
     logging.info(result)
-    if tresholdAmount:
+    if thresholdAmount:
         return func.HttpResponse(f"{result}")
     else:
         return func.HttpResponse(
