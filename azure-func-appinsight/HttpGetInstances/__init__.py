@@ -9,30 +9,33 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     name = str(req.params.get('project'))
     tools = dict()
-    tools.update({'hu-todss':
-                  {'Sonarqube': 
+    tools.update({'project': name,
+                   'tools':
+                  {'sonarqube': 
                     {
                       'id': '1',
-                      'Status': 'warning',
+                      'toolname': 'sonarqube',
+                      'status': 'warning',
                       'state' : True,
                       'instances':{
-                        'SonarVuln':{
+                        'sonarVuln':{
                            "state":True,
                            "status":"Success"
                         },
-                        'SonarCode':{
+                        'sonarCode':{
                            "state":True,
                            "status":"Success"
                         },
-                        'SonarCov':{
+                        'sonarCov':{
                            "state":True,
                            "status":"Warning"
                         }
                       }
                     },
-                    'Application insights':{
+                    'application-insights':{
                       'id': '2',
-                      'Status': 'warning',
+                      'toolname': 'application insights',
+                      'status': 'warning',
                       'state' : True,
                       'instances':{
                         'SonarVuln':{
