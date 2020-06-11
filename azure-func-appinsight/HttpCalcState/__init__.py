@@ -3,7 +3,7 @@ import os
 
 import azure.functions as func
 from azure.cosmos import CosmosClient
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 from ..HttpGetExceptions.handler_exception import *
 from ..HttpGetAvailability.handler_availability import *
@@ -13,7 +13,7 @@ from .. import constants
 TRH_COUNT_EXCEPTION = 'count_exception'
 TRH_AVAILABILITY_FAILED = 'availability_failed'
 
-load_dotenv()
+# load_dotenv()
 
 # client = CosmosClient(os.getenv("DB_ENDPOINT"), os.getenv("DB_KEY"))
 #
