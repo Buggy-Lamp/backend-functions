@@ -66,7 +66,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     tools = '['
 
     #sql = 'SELECT  distinct VALUE {"project": c.project,"tools":{toolnaam:c.toolname,status:\'warning\',state:\'true\',instances:ARRAY(SELECT VALUE {instancename:t.propertyname,\'state\':\'true\',\'status\':\'Succes\'} FROM t in c.properties) }}  FROM c  JOIN n IN (SELECT value  ARRAY(SELECT t FROM t in c.properties)) where c.project = \''+name+'\';
-    sql = "SELECT distinct VALUE {'project': c.project,'toolinfo':{toolnaam:c.toolname,status:'warning',state:'true',instances:ARRAY(SELECT VALUE {instancename:t.propertyname,'state':'true','status':'Succes'} FROM t in c.properties) }}  FROM c JOIN n IN (SELECT value  ARRAY(SELECT t FROM t in c.properties)) where c.project = '"+project+"'"
+    sql = "SELECT distinct VALUE {'project': c.project,toolname:c.toolname,status:'Warning',state:'true',instances:ARRAY(SELECT VALUE {name:t.propertyname,'state':'true','status':'Warning'} FROM t in c.properties) }  FROM c JOIN n IN (SELECT value  ARRAY(SELECT t FROM t in c.properties)) where c.project = '"+project+"'"
     test = container.query_items(query=sql, enable_cross_partition_query=True)
     print(test)
     for item in test:
