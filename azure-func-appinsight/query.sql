@@ -1,0 +1,1 @@
+SELECt  distinct VALUE {"project": c.project,"tools":{toolnaam:c.toolname,status:'warning',state:'true',instances:ARRAY(SELECT VALUE {instancename:t.propertyname,'state':'true','status':'Succes'} FROM t in c.properties) }}  FROM c JOIN n IN (SELECT value  ARRAY(SELECT t FROM t in c.properties)) where c.project = 'bier';
