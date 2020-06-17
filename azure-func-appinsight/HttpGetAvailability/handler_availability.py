@@ -1,15 +1,16 @@
-import azure.functions as func
-import requests
 import json
+
+import requests
 
 from .. import constants
 
-AVAILABILITY_URL = f'{constants.BASE_URL}/events/availabilityResults'
 
+def get_availability(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API_KEY,
+                     show_all=False, duration=10, only_failed=False) -> json:
+    availability_url = f'{constants.BASE_URL}/{api_name}/events/availabilityResults'
 
-def get_availability(req: func.HttpRequest, duration, only_failed=False) -> json:
     headers = {
-        constants.HEADER_AUTH_KEY: constants.API_KEY
+        constants.HEADER_AUTH_KEY: api_key
     }
 
     data = {
@@ -18,11 +19,11 @@ def get_availability(req: func.HttpRequest, duration, only_failed=False) -> json
         constants.REQ_FILTER_KEY: f'timestamp gt now() sub duration\'PT{duration}M\''
     }
 
-    if req.params.get('all') == 'true':
+    if show_all:
         data[constants.REQ_TOP_KEY] = '100'
 
     if only_failed:
         data[constants.REQ_FILTER_KEY] += ' and availabilityResult/success eq \'0\''
 
-    r = requests.get(AVAILABILITY_URL, headers=headers, params=data)
+    r = requests.get(availability_url, headers=headers, params=data)
     return r.json()

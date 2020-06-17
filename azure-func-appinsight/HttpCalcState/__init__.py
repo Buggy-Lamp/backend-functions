@@ -1,18 +1,14 @@
+import json
 import logging
-import os
 
 import azure.functions as func
 from azure.cosmos import CosmosClient
-# from dotenv import load_dotenv
 
-from ..HttpGetExceptions.handler_exception import *
-from ..HttpGetAvailability.handler_availability import *
-
+from .application_insights import process_application_insights
+from .util import find_color
 from .. import constants
 
-TRH_COUNT_EXCEPTION = 'count_exception'
-TRH_AVAILABILITY_FAILED = 'availability_failed'
-
+# from dotenv import load_dotenv
 # load_dotenv()
 
 # client = CosmosClient(os.getenv("DB_ENDPOINT"), os.getenv("DB_KEY"))
@@ -25,63 +21,54 @@ database = client.get_database_client(constants.DB_DATABASE_ID)
 container = database.get_container_client(constants.DB_CONTAINER_ID)
 
 
+# noinspection SqlDialectInspection,SqlNoDataSourceInspection
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    threshold = {}
-    jexception = get_exception(req, 10)
-    javailability = get_availability(req, 10, True)
+    project_id = req.params.get('project')
+    if not project_id:
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            project_id = req_body.get('project')
 
-    docs_ex = list(container.query_items(query='SELECT * FROM c WHERE c.tool = \'applicationinsights\' '
-                                               'AND c.instantiename = \'exception\'',
-                                         enable_cross_partition_query=True))
-    docs_avail = list(container.query_items(query='SELECT * FROM c WHERE c.tool = \'applicationinsights\' '
-                                                  'AND c.instantiename = \'availability\'',
-                                            enable_cross_partition_query=True))
+    if not project_id:
+        return func.HttpResponse(
+            "Please pass project on the query string or in the request body",
+            status_code=400
+        )
 
-    for doc in (docs_ex, docs_avail):
-        logging.info(json.dumps(doc, indent=True))
+    # Check if string contains escaping chars
+    if '\'' in project_id or '"' in project_id or '\\' in project_id:
+        return func.HttpResponse(
+            "Project is an invalid string",
+            status_code=400
+        )
 
-    count_ex = jexception[constants.RESP_COUNT_KEY]
-    count_avail = javailability[constants.RESP_COUNT_KEY]
-    count_max_ex = -1
-    count_max_avail = -1
+    project_settings = list(container.query_items(query=f'SELECT * FROM c WHERE '
+                                                        f'c.project = \'{project_id}\'',
+                                                  enable_cross_partition_query=True))
 
-    if len(docs_ex) > 0:
-        count_max_ex = docs_ex[0]['tresholdAmount']
-    if len(docs_avail) > 0:
-        count_max_avail = docs_avail[0]['tresholdAmount']
+    if len(project_settings) == 0:
+        return func.HttpResponse(
+            "Project not found",
+            status_code=404
+        )
 
-    wanted_keys = ['tresholdAmount', 'tresholdName', 'tool', 'instantiename']
+    project_settings = project_settings[0]
 
-    if count_ex > count_max_ex >= 0:
-        # Needs to be removed if not in DB; keeping for tests
-        threshold[TRH_COUNT_EXCEPTION] = 'testing'
+    appinsights_settings = list(filter(lambda x: x['tool_name'] == 'application_insights', project_settings['tools']))
+    appinsights_data = process_application_insights(appinsights_settings)
 
-        # Filter unwanted keys
-        if len(docs_ex) > 0:
-            threshold[TRH_COUNT_EXCEPTION] = dict((k, docs_ex[0][k]) for k in wanted_keys if k in docs_ex[0])
-
-    if count_avail > count_max_avail >= 0:
-        # Needs to be removed if not in DB; keeping for tests
-        threshold[TRH_AVAILABILITY_FAILED] = 'testing'
-
-        # Filter unwanted keys
-        if len(docs_avail) > 0:
-            threshold[TRH_COUNT_EXCEPTION] = dict((k, count_avail[0][k]) for k in wanted_keys if k in count_avail[0])
-
-    logging.info(f'Count exception >{count_max_ex}? {TRH_COUNT_EXCEPTION in threshold}')
-    logging.info(f'Count availability >{count_max_avail}? {TRH_AVAILABILITY_FAILED in threshold}')
-
-    color = 'green'
-
-    if len(threshold) >= 1:
-        color = 'orange'
-
-    if len(threshold) >= 2:
-        color = 'red'
+    color, color_weight = find_color(appinsights_data)
 
     return func.HttpResponse(json.dumps({
+        'project': project_settings['project'],
         'color': color,
-        'thresholds': threshold
+        'color_weight': color_weight,
+        'tools': {
+            'application_insights': appinsights_data
+        }
     }))
