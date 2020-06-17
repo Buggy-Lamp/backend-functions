@@ -64,12 +64,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     project = str(req.params.get('project'))
     instance_name = str(req.params.get('instance_name'))
+    print(instance_name)
     
     tools = '['
 
     #sql = 'SELECT  distinct VALUE {"project": c.project,"tools":{toolnaam:c.toolname,status:\'warning\',state:\'true\',instances:ARRAY(SELECT VALUE {instancename:t.propertyname,\'state\':\'true\',\'status\':\'Succes\'} FROM t in c.properties) }}  FROM c  JOIN n IN (SELECT value  ARRAY(SELECT t FROM t in c.properties)) where c.project = \''+name+'\';
     #sql = "SELECT distinct VALUE {'project': c.project,id:c.id,toolname:c.toolname,status:'Warning',state:'true',instances:ARRAY(SELECT VALUE {name:t.propertyname,'state':'true','status':'Warning'} FROM t in c.properties) }  FROM c JOIN n IN (SELECT value  ARRAY(SELECT t FROM t in c.properties)) where c.project = '"+project+"'"
-    if  len(instance_name) > 0:
+    if  instance_name != 'None':
         sql = 'SELECT value d FROM Families f JOIN c IN f.tools join d IN c.instances WHERE f.project = \''+project+'\' and d.instance_name  = \''+instance_name +'\''
     else:
         sql = 'SELECT* FROM c where c.project = \'' + project + '\''
