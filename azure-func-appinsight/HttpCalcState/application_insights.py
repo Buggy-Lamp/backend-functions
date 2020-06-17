@@ -1,16 +1,19 @@
-from .util import find_threshold, parse_error
+from .util import find_threshold, find_color, parse_error
 from .. import constants
 from ..HttpGetAvailability.handler_availability import get_availability
 from ..HttpGetExceptions.handler_exception import get_exception
 
 
 def single_instance(instance_setting, show_all=False) -> dict or None:
-    exception_settings = list(filter(lambda x: x['propertyname'] == 'exceptions',
+    exception_settings = list(filter(lambda x: x['property_name'] == 'exceptions',
                                      instance_setting['properties']))
-    availability_settings = list(filter(lambda x: x['propertyname'] == 'availability',
+    availability_settings = list(filter(lambda x: x['property_name'] == 'availability',
                                         instance_setting['properties']))
-
-    instance_data = {}
+    instance_data = {
+        'color': 'gray',
+        'color_weight': -1,
+        'properties': {}
+    }
 
     if len(exception_settings) > 0:
         exception_settings = exception_settings[0]
@@ -31,9 +34,9 @@ def single_instance(instance_setting, show_all=False) -> dict or None:
         if 'error' not in exception_data:
             exception_len = exception_data[constants.RESP_COUNT_KEY]
             threshold_target = find_threshold(exception_settings['thresholds'], exception_len)
-            threshold_target['foundValue'] = exception_len
+            threshold_target['found_value'] = exception_len
 
-            instance_data['exceptions'] = threshold_target
+            instance_data['properties']['exceptions'] = threshold_target
         else:
             instance_data['external_error'] = parse_error(exception_data)
 
@@ -46,11 +49,19 @@ def single_instance(instance_setting, show_all=False) -> dict or None:
         if 'error' not in availability_data:
             availability_len = availability_data[constants.RESP_COUNT_KEY]
             threshold_target = find_threshold(availability_settings['thresholds'], availability_len)
-            threshold_target['foundValue'] = availability_len
+            threshold_target['found_value'] = availability_len
 
-            instance_data['availability'] = threshold_target
+            instance_data['properties']['availability'] = threshold_target
         else:
             instance_data['external_error'] = parse_error(availability_data)
+
+    if len(instance_data['properties']) == 0:
+        del instance_data['properties']
+
+    if 'properties' in instance_data:
+        color, color_weight = find_color(instance_data['properties'])
+        instance_data['color'] = color
+        instance_data['color_weight'] = color_weight
 
     return instance_data
 

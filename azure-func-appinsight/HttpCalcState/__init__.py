@@ -5,6 +5,7 @@ import azure.functions as func
 from azure.cosmos import CosmosClient
 
 from .application_insights import process_application_insights
+from .util import find_color
 from .. import constants
 
 # from dotenv import load_dotenv
@@ -58,11 +59,15 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     project_settings = project_settings[0]
 
-    appinsights_settings = list(filter(lambda x: x['toolname'] == 'application_insights', project_settings['tools']))
+    appinsights_settings = list(filter(lambda x: x['tool_name'] == 'application_insights', project_settings['tools']))
     appinsights_data = process_application_insights(appinsights_settings)
+
+    color, color_weight = find_color(appinsights_data)
 
     return func.HttpResponse(json.dumps({
         'project': project_settings['project'],
+        'color': color,
+        'color_weight': color_weight,
         'tools': {
             'application_insights': appinsights_data
         }
