@@ -21,6 +21,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.info(json.dumps(item, indent=True))
         logging.info("ss")
 
-    rjson = get_exception(req, 10)
+    rjson = get_exception(req.params.get('all') == 'true', 10)
 
     return func.HttpResponse(json.dumps(rjson))

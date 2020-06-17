@@ -1,15 +1,16 @@
-import azure.functions as func
-import requests
 import json
+
+import requests
 
 from .. import constants
 
-EXCEPTIONS_URL = f'{constants.BASE_URL}/events/exceptions'
 
+def get_exception(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API_KEY,
+                  show_all=False, duration=10) -> json:
+    exceptions_url = f'{constants.BASE_URL}/{api_name}/events/exceptions'
 
-def get_exception(req: func.HttpRequest, duration) -> json:
     headers = {
-        constants.HEADER_AUTH_KEY: constants.API_KEY
+        constants.HEADER_AUTH_KEY: api_key
     }
 
     # There is a bug where >= 1 top results to the whole collection
@@ -19,8 +20,8 @@ def get_exception(req: func.HttpRequest, duration) -> json:
         constants.REQ_FILTER_KEY: f'timestamp gt now() sub duration\'PT{duration}M\''
     }
 
-    if req.params.get('all') == 'true':
+    if show_all:
         data[constants.REQ_TOP_KEY] = '100'
 
-    r = requests.get(EXCEPTIONS_URL, headers=headers, params=data)
+    r = requests.get(exceptions_url, headers=headers, params=data)
     return r.json()

@@ -1,5 +1,5 @@
 APP_INSIGHTS_NAME = 'DEMO_APP'
-BASE_URL = f'https://api.applicationinsights.io/v1/apps/{APP_INSIGHTS_NAME}'
+BASE_URL = f'https://api.applicationinsights.io/v1/apps'
 HEADER_AUTH_KEY = 'x-api-key'
 
 REQ_TOP_KEY = '$top'
