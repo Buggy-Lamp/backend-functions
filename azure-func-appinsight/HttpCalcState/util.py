@@ -1,3 +1,6 @@
+from typing import Iterable
+
+
 def find_threshold(thresholds: dict, target: int) -> dict:
     # Sort thresholds
     thresholds = sorted(thresholds, key=lambda k: k['min'])
@@ -20,8 +23,13 @@ def find_color(properties: dict) -> tuple:
     color = 'gray'
     color_weight = -1
 
+    import logging
+    logging.warning(properties)
     for property_key in properties:
         prop = properties[property_key]
+
+        if not isinstance(prop, Iterable):
+            continue
 
         if 'color' not in prop or 'color_weight' not in prop:
             continue

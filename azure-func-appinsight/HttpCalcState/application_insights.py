@@ -76,4 +76,8 @@ def process_application_insights(settings, show_all=False) -> dict or None:
     for instance in settings['instances']:
         return_data[instance['instance_name']] = single_instance(instance, show_all)
 
+    color, color_weight = find_color(return_data)
+    return_data['color'] = color
+    return_data['color_weight'] = color_weight
+
     return return_data
