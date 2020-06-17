@@ -1,5 +1,6 @@
 import logging
 
+import azure.functions as func
 from azure.cosmos import CosmosClient
 
 from .handler_exception import *

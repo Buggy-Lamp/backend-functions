@@ -1,5 +1,7 @@
 import logging
 
+import azure.functions as func
+
 from .handler_availability import *
 
 AVAILABILITY_URL = f'{constants.BASE_URL}/events/availabilityResults'
