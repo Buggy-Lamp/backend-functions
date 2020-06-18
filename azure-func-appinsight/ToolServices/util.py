@@ -23,8 +23,6 @@ def find_color(properties: dict) -> tuple:
     color = 'gray'
     color_weight = -1
 
-    import logging
-    logging.warning(properties)
     for property_key in properties:
         prop = properties[property_key]
 

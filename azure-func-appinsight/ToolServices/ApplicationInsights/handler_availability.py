@@ -2,7 +2,7 @@ import json
 
 import requests
 
-from .. import constants
+from ... import constants
 
 
 def get_availability(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API_KEY,

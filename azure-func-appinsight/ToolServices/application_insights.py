@@ -1,7 +1,7 @@
 from .util import find_threshold, find_color, parse_error
 from .. import constants
-from ..HttpGetAvailability.handler_availability import get_availability
-from ..HttpGetExceptions.handler_exception import get_exception
+from .ApplicationInsights import get_availability
+from .ApplicationInsights import get_exception
 
 
 def single_instance(instance_setting, show_all=False) -> dict or None:

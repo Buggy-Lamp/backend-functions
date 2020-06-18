@@ -4,21 +4,14 @@ import logging
 import azure.functions as func
 from azure.cosmos import CosmosClient
 
-from .application_insights import process_application_insights
-from .util import find_color
-from .. import constants
+from ..ToolServices import calc_state, exceptions
+from ..constants import DB_ENDPOINT, DB_KEY, DB_DATABASE_ID, DB_STATES_CONTAINER_ID
 
-# from dotenv import load_dotenv
-# load_dotenv()
 
-# client = CosmosClient(os.getenv("DB_ENDPOINT"), os.getenv("DB_KEY"))
-#
-# database = client.get_database_client(os.getenv("DB_DATABASE_ID"))
-# container = database.get_container_client(os.getenv("DB_CONTAINER_ID"))
-client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
+client = CosmosClient(DB_ENDPOINT, DB_KEY)
 
-database = client.get_database_client(constants.DB_DATABASE_ID)
-container = database.get_container_client(constants.DB_CONTAINER_ID)
+database = client.get_database_client(DB_DATABASE_ID)
+container = database.get_container_client(DB_STATES_CONTAINER_ID)
 
 
 # noinspection SqlDialectInspection,SqlNoDataSourceInspection
@@ -34,41 +27,22 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         else:
             project_id = req_body.get('project')
 
-    if not project_id:
-        return func.HttpResponse(
-            "Please pass project on the query string or in the request body",
-            status_code=400
-        )
-
-    # Check if string contains escaping chars
-    if '\'' in project_id or '"' in project_id or '\\' in project_id:
+    try:
+        state = calc_state(project_id)
+    except exceptions.InvalidProjectId:
         return func.HttpResponse(
             "Project is an invalid string",
             status_code=400
         )
-
-    project_settings = list(container.query_items(query=f'SELECT * FROM c WHERE '
-                                                        f'c.project = \'{project_id}\'',
-                                                  enable_cross_partition_query=True))
-
-    if len(project_settings) == 0:
+    except exceptions.ProjectNotFound:
         return func.HttpResponse(
             "Project not found",
             status_code=404
         )
 
-    project_settings = project_settings[0]
+    state['id'] = state['project']
 
-    appinsights_settings = list(filter(lambda x: x['tool_name'] == 'application_insights', project_settings['tools']))
-    appinsights_data = process_application_insights(appinsights_settings)
+    container.upsert_item(body=state)
 
-    color, color_weight = find_color(appinsights_data)
-
-    return func.HttpResponse(json.dumps({
-        'project': project_settings['project'],
-        'color': color,
-        'color_weight': color_weight,
-        'tools': {
-            'application_insights': appinsights_data
-        }
-    }))
+    return func.HttpResponse(json.dumps(state))
+    # return func.HttpResponse(status_code=201)
