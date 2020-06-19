@@ -19,9 +19,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     result = []
     sql = 'SELECT* FROM c'
     queryresult = container.query_items(query=sql, enable_cross_partition_query=True)
-    
     for item in queryresult:
-        print(item)
         result.append(item)
     result = json.dumps(result)
     return func.HttpResponse(f"{result}")

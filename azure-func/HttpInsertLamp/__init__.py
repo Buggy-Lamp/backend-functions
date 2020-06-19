@@ -6,6 +6,7 @@ from azure.cosmos import CosmosClient
 from .. import family
 from .. import constants
 
+import json
 client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
 
 database = client.get_database_client(constants.DB_DATABASE_ID)
@@ -18,10 +19,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     
     if macadress:
         result = container.create_item(body=req_body)
+       
+        result['url'] = '/'.join(req.url.split("/")[:-1]) + '/HttpGetLampData?lampid=' + result['id']
+        
+
+        print(dir(req))
+
     else:
         result = f"Not every condition is provided"
-   
-    logging.info(result)
     if result:
         return func.HttpResponse(f"{result}")
     else:
