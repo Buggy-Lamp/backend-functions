@@ -49,4 +49,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     result['url'] = urljoin(req.url,'HttpGetstate?code=hwa8MDSY6Jncf1BJjVLYERuLP1tGHdMejiG4aUA7FogBacdCRuQh1A==&project=' + project)
     result['mac']   = mac
 
-    return func.HttpResponse(json.dumps(result))
+    return func.HttpResponse(json.dumps(result), mimetype=constants.HTTP_JSON_MIMETYPE)

@@ -26,7 +26,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     else:
         result = f"Not every condition is provided"
     if result:
-        return func.HttpResponse(f"{result}")
+        return func.HttpResponse(json.dumps(result))
     else:
         return func.HttpResponse(
              "Please pass a name on the query string or in the request body",

@@ -1,3 +1,4 @@
+import json
 import logging
 
 import azure.functions as func
@@ -20,5 +21,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # except:
     #     result = f"The id is already in use or database error "
     logging.info(result)
-    return func.HttpResponse(f"{result}")
-    
+    return func.HttpResponse(json.dumps(result), mimetype=constants.HTTP_JSON_MIMETYPE)
