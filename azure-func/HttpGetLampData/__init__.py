@@ -4,6 +4,9 @@ import logging
 import azure.functions as func
 from azure.cosmos import CosmosClient
 
+
+from urllib.parse import urljoin
+
 from .. import constants
 
 client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
@@ -42,7 +45,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     result = {}
     mac             = states[0]['mac']
     project         = states[0]['project']
-    result['url']   = '/'.join(req.url.split("/")[:-1]) + '/HttpGetstate?project=' + project
+
+    result['url'] = urljoin(req.url,'HttpGetstate?code=hwa8MDSY6Jncf1BJjVLYERuLP1tGHdMejiG4aUA7FogBacdCRuQh1A==&project=' + project)
     result['mac']   = mac
 
     return func.HttpResponse(json.dumps(result))

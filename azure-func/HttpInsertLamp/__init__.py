@@ -1,4 +1,6 @@
 import logging
+from urllib.parse import urlparse
+from urllib.parse import urljoin
 
 import azure.functions as func
 from azure.cosmos import CosmosClient
@@ -19,12 +21,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     
     if macadress:
         result = container.create_item(body=req_body)
-       
-        result['url'] = '/'.join(req.url.split("/")[:-1]) + '/HttpGetLampData?lampid=' + result['id']
-        
-
-        print(dir(req))
-
+        o = urlparse(req.url)
+        result['url'] = urljoin(req.url,'HttpGetLampData?code=53DiyE4/SdwJTN4ZcWFhL9PK4r115XbHBCB4XR8RpWvnvuJPYuxujA==&lampid=' +result['id'])
     else:
         result = f"Not every condition is provided"
     if result:
