@@ -14,9 +14,10 @@ container = database.get_container_client(constants.DB_CONTAINER_ID)
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
-    req_body        = family.generateid(req.get_json())
+    req_body        = req.get_json()
     # try:
-    result = container.create_item(body=req_body)
+    result = family.update(container,req_body)
+    # result = container.create_item(body=req_body)
     # except:
     #     result = f"The id is already in use or database error "
     logging.info(result)

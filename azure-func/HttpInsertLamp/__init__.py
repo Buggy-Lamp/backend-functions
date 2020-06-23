@@ -22,7 +22,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if macadress:
         result = container.create_item(body=req_body)
         o = urlparse(req.url)
-        result['url'] = urljoin(req.url,'HttpGetLampData?code=53DiyE4/SdwJTN4ZcWFhL9PK4r115XbHBCB4XR8RpWvnvuJPYuxujA==&lampid=' +result['id'])
+        result["url"] = urljoin(req.url,"HttpGetLampData?code=53DiyE4/SdwJTN4ZcWFhL9PK4r115XbHBCB4XR8RpWvnvuJPYuxujA==&lampid=" +result['id'])
     else:
         result = f"Not every condition is provided"
     if result:
