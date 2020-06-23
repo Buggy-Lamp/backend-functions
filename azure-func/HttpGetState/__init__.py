@@ -48,4 +48,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         )
 
     state = states[0]
-    return func.HttpResponse(json.dumps(state))
+    return func.HttpResponse(json.dumps(state), mimetype=constants.HTTP_JSON_MIMETYPE)

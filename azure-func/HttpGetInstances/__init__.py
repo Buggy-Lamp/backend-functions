@@ -1,93 +1,95 @@
+import json
 import logging
 
 import azure.functions as func
-
- # tools.update({'project': name,
-      #                'tools':
-      #               {'sonarqube': 
-      #                 {
-      #                   'id': '1',
-      #                   'toolname': 'sonarqube',
-      #                   'status': 'warning',
-      #                   'state' : True,
-      #                   'instances':{
-      #                     'sonarVuln':{
-      #                        "state":True,
-      #                        "status":"Success"
-      #                     },
-      #                     'sonarCode':{
-      #                        "state":True,
-      #                        "status":"Success"
-      #                     },
-      #                     'sonarCov':{
-      #                        "state":True,
-      #                        "status":"Warning"
-      #                     }
-      #                   }
-      #                 },
-      #                 'application-insights':{
-      #                   'id': '2',
-      #                   'toolname': 'application insights',
-      #                   'status': 'warning',
-      #                   'state' : True,
-      #                   'instances':{
-      #                     'SonarVuln':{
-      #                        "state":True,
-      #                        "status":"Success"
-      #                     },
-      #                     'SonarCode':{
-      #                        "state":True,
-      #                        "status":"Success"
-      #                     },
-      #                     'SonarCov':{
-      #                        "state":True,
-      #                        "status":"Warning"
-      #                     }
-      #                   }
-      #                 }
-      #               }
-      #             }
-      #  )
-
 from azure.cosmos import CosmosClient
 
-from .. import family
-from .. import constants
+from ..constants import DB_ENDPOINT, DB_KEY, DB_DATABASE_ID, DB_CONTAINER_ID, DB_STATES_CONTAINER_ID, HTTP_JSON_MIMETYPE
 
-client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
+client = CosmosClient(DB_ENDPOINT, DB_KEY)
 
-database = client.get_database_client(constants.DB_DATABASE_ID)
-container = database.get_container_client(constants.DB_CONTAINER_ID)
-import json
+database = client.get_database_client(DB_DATABASE_ID)
+container = database.get_container_client(DB_CONTAINER_ID)
+states_container = database.get_container_client(DB_STATES_CONTAINER_ID)
+
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
-    project = str(req.params.get('project'))
-    instance_name = str(req.params.get('instance_name'))
-    print(instance_name)
-    
-    tools = '['
 
-    #sql = 'SELECT  distinct VALUE {"project": c.project,"tools":{toolnaam:c.toolname,status:\'warning\',state:\'true\',instances:ARRAY(SELECT VALUE {instancename:t.propertyname,\'state\':\'true\',\'status\':\'Succes\'} FROM t in c.properties) }}  FROM c  JOIN n IN (SELECT value  ARRAY(SELECT t FROM t in c.properties)) where c.project = \''+name+'\';
-    #sql = "SELECT distinct VALUE {'project': c.project,id:c.id,toolname:c.toolname,status:'Warning',state:'true',instances:ARRAY(SELECT VALUE {name:t.propertyname,'state':'true','status':'Warning'} FROM t in c.properties) }  FROM c JOIN n IN (SELECT value  ARRAY(SELECT t FROM t in c.properties)) where c.project = '"+project+"'"
-    if  instance_name != 'None':
-        sql = 'SELECT value d FROM Families f JOIN c IN f.tools join d IN c.instances WHERE f.project = \''+project+'\' and d.instance_name  = \''+instance_name +'\''
-    else:
-        sql = 'SELECT* FROM c where c.project = \'' + project + '\''
-    print(sql)
+    project_id = req.params.get('project')
+    instance_name = req.params.get('instance_name')
+    if not project_id or not instance_name:
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            project_id = req_body.get('project') \
+                if req_body.get('project') is not None else project_id
+            instance_name = req_body.get('instance_name') \
+                if req_body.get('instance_name') is not None else instance_name
 
-    queryresult = container.query_items(query=sql, enable_cross_partition_query=True)
-    print(queryresult)
+    if not project_id:
+        return func.HttpResponse("Project is a required field", status_code=400)
 
-    for item in queryresult:
-      tools += json.dumps(item) + ','
-    tools = tools[:-1];
-    tools += ']';
-    
-    
-     
-    # print(tools)
-    # Result = json.dumps(tools)
-    
-        
-    return func.HttpResponse(tools)
+    if '\'' in project_id or '"' in project_id or '\\' in project_id:
+        return func.HttpResponse("Project is an invalid string", status_code=400)
+
+    if instance_name:
+        if '\'' in instance_name or '"' in project_id or '\\' in project_id:
+            return func.HttpResponse("Instance name is an invalid string", status_code=400)
+
+    settings = list(container.query_items(query=f"SELECT * FROM c WHERE "
+                                                f"c.project = '{project_id}'",
+                                          enable_cross_partition_query=True))
+
+    if len(settings) == 0:
+        return func.HttpResponse("Project is not found", status_code=404)
+
+    settings = settings[0]
+
+    state = list(states_container.query_items(query=f"SELECT * FROM c WHERE "
+                                                    f"c.id = '{project_id}'",
+                                              enable_cross_partition_query=True))
+    if len(state) >= 0:
+        state = state[0]
+        attach_state(settings=settings, state=state)
+
+    if instance_name:
+        instance_settings = []
+        for tool in settings['tools']:
+            for instance in tool['instances']:
+                if instance['instance_name'] == instance_name:
+                    instance_settings.append(instance)
+
+        settings = instance_settings
+
+    return func.HttpResponse(json.dumps(settings), mimetype=HTTP_JSON_MIMETYPE)
+
+
+def attach_state(settings: dict, state: dict):
+    settings['state_color'] = state['color']
+
+    for tool in settings['tools']:
+        if tool['tool_name'] not in state['tools']:
+            tool['color'] = 'gray'
+            continue
+
+        tool_state = state['tools'][tool['tool_name']]
+        tool['state_color'] = tool_state['color']
+
+        for instance in tool['instances']:
+            if instance['instance_name'] not in tool_state:
+                continue
+
+            instance_state = tool_state[instance['instance_name']]
+            instance['state_color'] = instance_state['color']
+
+            for prop in instance['properties']:
+                if 'properties' not in instance_state:
+                    continue
+                if prop['property_name'] not in instance_state['properties']:
+                    continue
+
+                prop_state = instance_state['properties'][prop['property_name']]
+                prop['state_color'] = prop_state['color']

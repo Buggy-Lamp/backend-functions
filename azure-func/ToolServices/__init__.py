@@ -15,8 +15,8 @@ def calc_state(project_id: str) -> dict:
     if '\'' in project_id or '"' in project_id or '\\' in project_id:
         raise InvalidProjectId
 
-    project_settings = list(container.query_items(query=f'SELECT * FROM c WHERE '
-                                                        f'c.project = \'{project_id}\'',
+    project_settings = list(container.query_items(query=f"SELECT * FROM c WHERE "
+                                                        f"c.project = '{project_id}'",
                                                   enable_cross_partition_query=True))
 
     if len(project_settings) == 0:

@@ -4,7 +4,7 @@ import logging
 import azure.functions as func
 
 from ..ToolServices import ApplicationInsights
-from ..constants import BASE_URL
+from ..constants import BASE_URL, HTTP_JSON_MIMETYPE
 
 AVAILABILITY_URL = f'{BASE_URL}/events/availabilityResults'
 
@@ -14,4 +14,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     rjson = ApplicationInsights.get_availability(req.params.get('all') == 'true', 10)
 
-    return func.HttpResponse(json.dumps(rjson))
+    return func.HttpResponse(json.dumps(rjson), mimetype=HTTP_JSON_MIMETYPE)

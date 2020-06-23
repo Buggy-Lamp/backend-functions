@@ -17,3 +17,5 @@ DB_CONTAINER_ID = 'Instances'
 DB_LAMPCONTAINER_ID = 'LampContainer'
 DB_STATES_CONTAINER_ID = 'States'
 DB_ToolTypes_ID = 'Tooltypes'
+
+HTTP_JSON_MIMETYPE = 'application/json'

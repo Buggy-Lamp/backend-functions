@@ -8,7 +8,6 @@ from .. import constants
 
 import json
 
-
 client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
 
 database = client.get_database_client(constants.DB_DATABASE_ID)
@@ -22,5 +21,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     for item in queryresult:
         result.append(item)
     result = json.dumps(result)
-    return func.HttpResponse(f"{result}")
-    
+    return func.HttpResponse(result, mimetype=constants.HTTP_JSON_MIMETYPE)
