@@ -2,9 +2,13 @@ APP_INSIGHTS_NAME = 'DEMO_APP'
 BASE_URL = f'https://api.applicationinsights.io/v1/apps'
 HEADER_AUTH_KEY = 'x-api-key'
 
+SQ_BASE_URL = 'https://sonarqube-azureappservice73d6.azurewebsites.net/'
+
 REQ_TOP_KEY = '$top'
 REQ_COUNT_KEY = '$count'
 REQ_FILTER_KEY = '$filter'
+
+REQ_PROJECT_KEY = 'projectKey'
 
 RESP_COUNT_KEY = '@odata.count'
 

@@ -1,6 +1,6 @@
 from azure.cosmos import CosmosClient
 
-from . import application_insights, util
+from . import application_insights, sonarqube, util
 from .exceptions import *
 from ..constants import DB_ENDPOINT, DB_KEY, DB_DATABASE_ID, DB_CONTAINER_ID
 
@@ -26,6 +26,9 @@ def calc_state(project_id: str) -> dict:
 
     appinsights_settings = list(filter(lambda x: x['tool_name'] == 'application_insights', project_settings['tools']))
     appinsights_data = application_insights.process_application_insights(appinsights_settings)
+
+    sonarqube_settings = list(filter(lambda x: x['tool_name'] == 'sonarqube', project_settings['tools']))
+    sonarqube_data = sonarqube.process_sonarqube(sonarqube_settings)
 
     color, color_weight = util.find_color(appinsights_data)
     state = {
