@@ -11,6 +11,9 @@ container = database.get_container_client(DB_CONTAINER_ID)
 
 
 def calc_state(project_id: str) -> dict:
+    if not project_id:
+        raise InvalidProjectId
+
     # Check if string contains escaping chars
     if '\'' in project_id or '"' in project_id or '\\' in project_id:
         raise InvalidProjectId
@@ -30,13 +33,16 @@ def calc_state(project_id: str) -> dict:
     sonarqube_settings = list(filter(lambda x: x['tool_name'] == 'sonarqube', project_settings['tools']))
     sonarqube_data = sonarqube.process_sonarqube(sonarqube_settings)
 
-    color, color_weight = util.find_color(appinsights_data)
+    # TODO: There might be a bug where two instances with the same name with different tools causes issues
+    #   This happens because the second tool overrides the same key (instance name)
+    color, color_weight = util.find_color({**appinsights_data, **sonarqube_data})
     state = {
         'project': project_settings['project'],
         'color': color,
         'color_weight': color_weight,
         'tools': {
-            'application_insights': appinsights_data
+            'application_insights': appinsights_data,
+            'sonarqube': sonarqube_data
         }
     }
 
