@@ -5,7 +5,7 @@ from .. import constants
 from .Sonarqube import get_quality_gate
 
 
-def single_instance(instance_setting, show_all=False) -> dict or None:
+def single_instance(instance_setting) -> dict or None:
     quality_gate_settings = list(filter(lambda x: x['property_name'] == 'qualitygate',
                                         instance_setting['properties']))
 
