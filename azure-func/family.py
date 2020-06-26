@@ -45,9 +45,8 @@ def update(container,requestinfo):
 			toolindex =  findindex(newtoolname,currentitem['tools'],'tool_name')
 			instanceindex = findindex(instance_name,currentitem['tools'][toolindex]['instances'],'instance_name')
 			currentitem['tools'][toolindex]['instances'][instanceindex] = newinstance;
-			
-		return currentitem;
-		# return container.create_item(body=currentitem)
+
+		return container.upsert_item(body=currentitem)
 def findindex(needle,itemslist,searchindex):
 
 	for index, value in enumerate(itemslist,start = 0):
