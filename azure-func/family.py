@@ -14,9 +14,10 @@ def update(container,requestinfo):
 		return container.create_item(body=requestinfo)
 	else:
 		# print(requestinfo);
-		newtoollist = requestinfo['tools']
+		newtoollist = requestinfo['tools'][0]
 		newtoolname = newtoollist['tool_name']
-		instance_name = newtoollist['instance_name']
+		newinstance = newtoollist['instances'][0]
+		instance_name = newinstance['instance_name']
 		
 		instancecheck = 'SELECT d FROM projects f JOIN c IN f.tools join d IN c.instances WHERE f.project = \''+project+'\' and d.instance_name  = \''+instance_name +'\''
 		instancecheck = len(list(container.query_items(query=instancecheck, enable_cross_partition_query=True)))
@@ -33,21 +34,20 @@ def update(container,requestinfo):
 			instancecheck = True
 		else:
 			instancecheck = False
-		# return toolcheck
-		# if the tool is new the isntance is also new
 		currentitem = currentitem[0]
 		if toolcheck:
 			currentitem['tools'].append(newtoollist)
 			return currentitem
 		elif instancecheck:
 			toolindex =  findindex(newtoolname,currentitem['tools'],'tool_name')
-			currentitem['tools'][toolindex]['instances'].append();
+			currentitem['tools'][toolindex]['instances'].append(newinstance)
 		else:
 			toolindex =  findindex(newtoolname,currentitem['tools'],'tool_name')
-			instanceindex = findindex(instance_name,currentitem['tools'][toolindex]['instances'],instance_name)
+			instanceindex = findindex(instance_name,currentitem['tools'][toolindex]['instances'],'instance_name')
 			currentitem['tools'][toolindex]['instances'][instanceindex] = newinstance;
-
-		return container.create_item(body=currentitem)
+			
+		return currentitem;
+		# return container.create_item(body=currentitem)
 def findindex(needle,itemslist,searchindex):
 
 	for index, value in enumerate(itemslist,start = 0):
