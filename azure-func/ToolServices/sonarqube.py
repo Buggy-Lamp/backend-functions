@@ -29,7 +29,8 @@ def single_instance(instance_setting) -> dict or None:
         # 0 = OK; 1 = FAILED
         threshold_status = 0 if quality_gate_data['projectStatus']['status'] == 'OK' else 1
 
-        threshold_target = find_threshold(quality_gate_settings['thresholds'], threshold_status)
+        # An multiplier of 2 is needed because the quality gate has only 2 thresholds instead of 3
+        threshold_target = find_threshold(quality_gate_settings['thresholds'], threshold_status, multiplier=2)
 
         instance_data['properties']['qualitygate'] = threshold_target
 

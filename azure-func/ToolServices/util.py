@@ -1,7 +1,7 @@
 from typing import Iterable
 
 
-def find_threshold(thresholds: dict, target: int) -> dict:
+def find_threshold(thresholds: dict, target: int, multiplier=1) -> dict:
     # Sort thresholds
     thresholds = sorted(thresholds, key=lambda k: k['min'])
 
@@ -14,7 +14,7 @@ def find_threshold(thresholds: dict, target: int) -> dict:
 
         target_threshold = threshold
         target_threshold['color_weight'] = weight
-        weight += 1
+        weight += 1 * multiplier
 
     return target_threshold
 
