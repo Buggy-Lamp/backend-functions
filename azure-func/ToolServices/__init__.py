@@ -46,6 +46,4 @@ def calc_state(project_id: str) -> dict:
         }
     }
 
-    # return func.HttpResponse(json.dumps(state))
-    # return func.HttpResponse(status_code=201)
     return state
