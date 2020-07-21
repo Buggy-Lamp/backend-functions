@@ -26,7 +26,7 @@ def single_instance(instance_setting) -> dict or None:
             instance_setting['api_project_id']
         )
 
-        # 0 = OK; 1 = FAILED
+        # 0 means OK; 1 means FAILED
         threshold_status = 0 if quality_gate_data['projectStatus']['status'] == 'OK' else 1
 
         # An multiplier of 2 is needed because the quality gate has only 2 thresholds instead of 3
