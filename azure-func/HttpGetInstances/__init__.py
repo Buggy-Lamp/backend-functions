@@ -51,7 +51,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     state = list(states_container.query_items(query=f"SELECT * FROM c WHERE "
                                                     f"c.id = '{project_id}'",
                                               enable_cross_partition_query=True))
-    if len(state) >= 0:
+    if len(state) > 0:
         state = state[0]
         attach_state(settings=settings, state=state)
 
