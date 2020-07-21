@@ -40,10 +40,8 @@ def find_color(properties: dict) -> tuple:
 
 
 def parse_error(data: dict) -> dict:
-    if 'error' in data:
-        if 'code' in data['error']:
-            if data['error']['code'] == 'PathNotFoundError':
-                data['description'] = 'The provided api_name can\'t be found in application insights.'
-                return data
+    if 'error' in data and 'code' in data['error'] and data['error']['code'] == 'PathNotFoundError':
+        data['description'] = 'The provided api_name can\'t be found in application insights.'
+        return data
 
     return data
