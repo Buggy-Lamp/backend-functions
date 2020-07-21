@@ -44,15 +44,19 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         attach_state(settings=settings, state=state)
 
     if instance_name:
-        instance_settings = []
-        for tool in settings['tools']:
-            for instance in tool['instances']:
-                if instance['instance_name'] == instance_name:
-                    instance_settings.append(instance)
-
-        settings = instance_settings
+        settings = filter_instance_name(settings, instance_name)
 
     return func.HttpResponse(json.dumps(settings), mimetype=HTTP_JSON_MIMETYPE)
+
+
+def filter_instance_name(settings: dict, instance_name: str):
+    instance_settings = []
+    for tool in settings['tools']:
+        for instance in tool['instances']:
+            if instance['instance_name'] == instance_name:
+                instance_settings.append(instance)
+
+    return instance_settings
 
 
 def extract_req_info(req: func.HttpRequest):
