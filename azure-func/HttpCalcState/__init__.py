@@ -44,4 +44,3 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     container.upsert_item(body=state)
 
     return func.HttpResponse(json.dumps(state), mimetype=HTTP_JSON_MIMETYPE)
-    # return func.HttpResponse(status_code=201)
