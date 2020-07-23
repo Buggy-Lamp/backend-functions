@@ -24,8 +24,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if '\'' in project_id or '"' in project_id or '\\' in project_id:
         return func.HttpResponse("Project is an invalid string", status_code=400)
 
-    if instance_name or '\'' in instance_name or '"' in project_id or '\\' in project_id:
-        return func.HttpResponse("Instance name is an invalid string", status_code=400)
+    if instance_name:
+        if '\'' in instance_name or '"' in project_id or '\\' in project_id:
+            return func.HttpResponse("Instance name is an invalid string", status_code=400)
 
     settings = list(container.query_items(query=f"SELECT * FROM c WHERE "
                                                 f"c.project = '{project_id}'",
