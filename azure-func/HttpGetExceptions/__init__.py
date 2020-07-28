@@ -12,6 +12,6 @@ EXCEPTIONS_URL = f'{BASE_URL}/events/exceptions'
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    rjson = ApplicationInsights.get_exception(req.params.get('all') == 'true', 10)
+    rjson = ApplicationInsights.get_exception(show_all=req.params.get('all') == 'true', duration=10)
 
     return func.HttpResponse(json.dumps(rjson), mimetype=HTTP_JSON_MIMETYPE)
