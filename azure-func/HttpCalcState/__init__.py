@@ -4,7 +4,7 @@ import logging
 import azure.functions as func
 from azure.cosmos import CosmosClient
 
-from ..ToolServices import calc_state, exceptions
+from ..ToolServices import calc_state, exceptions, request_util
 from ..constants import DB_ENDPOINT, DB_KEY, DB_DATABASE_ID, DB_STATES_CONTAINER_ID, HTTP_JSON_MIMETYPE
 
 
@@ -17,14 +17,7 @@ container = database.get_container_client(DB_STATES_CONTAINER_ID)
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    project_id = req.params.get('project')
-    if not project_id:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            project_id = req_body.get('project')
+    project_id = request_util.find_parameter(req, 'project')
 
     try:
         state = calc_state(project_id)

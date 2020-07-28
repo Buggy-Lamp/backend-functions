@@ -1,12 +1,8 @@
-import json
-import logging
-
 import azure.functions as func
 from azure.cosmos import CosmosClient
 
-from urllib.parse import urljoin
-
 from .. import constants
+from ..ToolServices import request_util
 
 client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
 
@@ -15,28 +11,8 @@ states_container = database.get_container_client(constants.DB_LAMPCONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    lampid = req.params.get('lampid')
-    project = req.params.get('project')
-    if not lampid:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            lampid = req_body.get('lampid')
-    if not lampid:
-        return func.HttpResponse(
-            "Please pass lampid on the query string or in the request body",
-            status_code=400
-        )
-
-    if not project:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            lampid = req_body.get('project')
+    project = request_util.find_parameter(req, 'project')
+    lamp_id = request_util.find_parameter(req, 'lampid')
 
     if not project:
         return func.HttpResponse(
@@ -44,6 +20,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
 
-    states_container.delete_item(lampid, project)
+    if not lamp_id:
+        return func.HttpResponse(
+            "Please pass lamp_id on the query string or in the request body",
+            status_code=400
+        )
+
+    states_container.delete_item(lamp_id, project)
 
     return func.HttpResponse()

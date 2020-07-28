@@ -5,6 +5,7 @@ import azure.functions as func
 from azure.cosmos import CosmosClient
 
 from .. import constants
+from ..ToolServices import request_util
 
 client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
 
@@ -15,20 +16,7 @@ states_container = database.get_container_client(constants.DB_STATES_CONTAINER_I
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    project_id = req.params.get('project')
-    if not project_id:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            project_id = req_body.get('project')
-
-    if not project_id:
-        return func.HttpResponse(
-            "Please pass project on the query string or in the request body",
-            status_code=400
-        )
+    project_id = request_util.find_parameter(req, 'project')
 
     # Check if string contains escaping chars
     if '\'' in project_id or '"' in project_id or '\\' in project_id:

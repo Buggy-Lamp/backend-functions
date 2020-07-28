@@ -4,7 +4,9 @@ import logging
 import azure.functions as func
 from azure.cosmos import CosmosClient
 
-from ..constants import DB_ENDPOINT, DB_KEY, DB_DATABASE_ID, DB_CONTAINER_ID, DB_STATES_CONTAINER_ID, HTTP_JSON_MIMETYPE
+from ..ToolServices import request_util
+from ..constants import DB_ENDPOINT, DB_KEY, DB_DATABASE_ID, DB_CONTAINER_ID, DB_STATES_CONTAINER_ID, \
+    HTTP_JSON_MIMETYPE
 
 client = CosmosClient(DB_ENDPOINT, DB_KEY)
 
@@ -16,7 +18,8 @@ states_container = database.get_container_client(DB_STATES_CONTAINER_ID)
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    project_id, instance_name = extract_req_info(req)
+    project_id = request_util.find_parameter(req, 'project')
+    instance_name = request_util.find_parameter(req, 'instance_name')
 
     if not project_id:
         return func.HttpResponse("Project is a required field", status_code=400)
@@ -58,23 +61,6 @@ def filter_instance_name(settings: dict, instance_name: str):
                 instance_settings.append(instance)
 
     return instance_settings
-
-
-def extract_req_info(req: func.HttpRequest):
-    project_id = req.params.get('project')
-    instance_name = req.params.get('instance_name')
-    if not project_id or not instance_name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            project_id = req_body.get('project') \
-                if req_body.get('project') is not None else project_id
-            instance_name = req_body.get('instance_name') \
-                if req_body.get('instance_name') is not None else instance_name
-
-    return project_id, instance_name
 
 
 def attach_state(settings: dict, state: dict):
