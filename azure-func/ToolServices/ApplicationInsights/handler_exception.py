@@ -3,6 +3,7 @@ import json
 import requests
 
 from ... import constants
+from ..exceptions import ToolUnavailable
 
 
 def get_exception(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API_KEY,
@@ -23,5 +24,9 @@ def get_exception(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API_KE
     if show_all:
         data[constants.REQ_TOP_KEY] = '100'
 
-    r = requests.get(exceptions_url, headers=headers, params=data)
+    try:
+        r = requests.get(exceptions_url, headers=headers, params=data, timeout=constants.HTTP_TIMEOUT)
+    except requests.exceptions.Timeout:
+        raise ToolUnavailable
+
     return r.json()

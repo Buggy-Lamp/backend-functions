@@ -1,6 +1,7 @@
 import logging
 
 from .util import find_color, parse_error, find_threshold
+from .exceptions import ToolUnavailable
 from .. import constants
 from .Sonarqube import get_quality_gate
 
@@ -21,18 +22,11 @@ def single_instance(instance_setting) -> dict or None:
         quality_gate_settings = None
 
     if quality_gate_settings:
-        quality_gate_data = get_quality_gate(
-            instance_setting['api_name'], instance_setting['api_key'],
-            instance_setting['api_project_id']
+        _process_quality_gate(
+            instance_setting=instance_setting,
+            instance_data=instance_data,
+            quality_gate_settings=quality_gate_settings
         )
-
-        # 0 means OK; 1 means FAILED
-        threshold_status = 0 if quality_gate_data['projectStatus']['status'] == 'OK' else 1
-
-        # An multiplier of 2 is needed because the quality gate has only 2 thresholds instead of 3
-        threshold_target = find_threshold(quality_gate_settings['thresholds'], threshold_status, multiplier=2)
-
-        instance_data['properties']['qualitygate'] = threshold_target
 
     if len(instance_data['properties']) == 0:
         del instance_data['properties']
@@ -43,6 +37,25 @@ def single_instance(instance_setting) -> dict or None:
         instance_data['color_weight'] = color_weight
 
     return instance_data
+
+
+def _process_quality_gate(instance_setting: dict, instance_data: dict, quality_gate_settings: dict):
+    try:
+        quality_gate_data = get_quality_gate(
+            instance_setting['api_name'], instance_setting['api_key'],
+            instance_setting['api_project_id']
+        )
+    except ToolUnavailable:
+        instance_data['error'] = 'Tool is unavailable at the moment'
+        return
+
+    # 0 means OK; 1 means FAILED
+    threshold_status = 0 if quality_gate_data['projectStatus']['status'] == 'OK' else 1
+
+    # An multiplier of 2 is needed because the quality gate has only 2 thresholds instead of 3
+    threshold_target = find_threshold(quality_gate_settings['thresholds'], threshold_status, multiplier=2)
+
+    instance_data['properties']['qualitygate'] = threshold_target
 
 
 def process_sonarqube(settings) -> dict or None:

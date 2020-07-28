@@ -23,3 +23,4 @@ DB_STATES_CONTAINER_ID = 'States'
 DB_ToolTypes_ID = 'Tooltypes'
 
 HTTP_JSON_MIMETYPE = 'application/json'
+HTTP_TIMEOUT = 3

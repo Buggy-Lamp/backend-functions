@@ -3,6 +3,7 @@ import json
 import requests
 
 from ... import constants
+from ..exceptions import ToolUnavailable
 
 
 def get_availability(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API_KEY,
@@ -25,5 +26,9 @@ def get_availability(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API
     if only_failed:
         data[constants.REQ_FILTER_KEY] += ' and availabilityResult/success eq \'0\''
 
-    r = requests.get(availability_url, headers=headers, params=data)
+    try:
+        r = requests.get(availability_url, headers=headers, params=data, timeout=constants.HTTP_TIMEOUT)
+    except requests.exceptions.Timeout:
+        raise ToolUnavailable
+
     return r.json()
