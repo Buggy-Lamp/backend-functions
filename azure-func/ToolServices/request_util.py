@@ -12,4 +12,4 @@ def find_parameter(req: func.HttpRequest, parameter_name: str, default=None):
             param = req_body.get(parameter_name) \
                 if req_body.get(parameter_name) is not None else param
 
-    return default if not param else param
+    return default if param is None else param
