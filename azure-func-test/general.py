@@ -2,23 +2,21 @@ import unittest
 
 import requests
 
-# http://localhost:7071/api/HttpCalcState?project=template-SmartHotel360
-api = "http://localhost:7071/api/HttpCalcState"
-
-
 def create_request(payload):
     post = requests.post(url=api, json=payload)
     return post.status_code
 
+api = "http://localhost:7071/api/HttpCalcState"
+# http://localhost:7071/api/HttpCalcState/template-SmartHotel360
 
-class MyTestCase(unittest.TestCase):
+
+class TestHttpCalcState(unittest.TestCase):
     httpRequestData = {'project': 'template-SmartHotel360'}
 
     httpRequestFalseData = {'project': 'test\'ad'}
 
     httpRequestNotFoundData = {'project': 'project1234'}
 
-    # This one shouldn't get caught by the server resulting in a 500 of sorts.
     httpRequestInvalidJson = {'proj3ct': 'project1234'}
 
     def test_validProject(self):
@@ -27,10 +25,6 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(200, result)
 
     def test_ProjectInvalidString(self):
-        # InvalidProjectId literally cannot find any documentation of this exception or when it throws
-        # 404 != 400
-        # Expected: 400
-        # Actual: 404
         result = create_request(self.httpRequestFalseData)
         self.assertEqual(400, result)
 
@@ -43,5 +37,6 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(400, result)
 
 
+#So it can be run from commandline
 if __name__ == '__main__':
     unittest.main()
