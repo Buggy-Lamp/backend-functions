@@ -1,10 +1,5 @@
 import unittest
-
-import requests
-
-def create_request(payload):
-    post = requests.post(url=api, json=payload)
-    return post.status_code
+from RequestGeneratorUtil import create_POST
 
 api = "http://localhost:7071/api/HttpCalcState"
 # http://localhost:7071/api/HttpCalcState/template-SmartHotel360
@@ -21,19 +16,19 @@ class TestHttpCalcState(unittest.TestCase):
 
     def test_validProject(self):
         # need valid project
-        result = create_request(self.httpRequestData)
+        result = create_POST(api,self.httpRequestData)
         self.assertEqual(200, result)
 
     def test_ProjectInvalidString(self):
-        result = create_request(self.httpRequestFalseData)
+        result = create_POST(api,self.httpRequestFalseData)
         self.assertEqual(400, result)
 
     def test_ProjectNotFound(self):
-        result = create_request(self.httpRequestNotFoundData)
+        result = create_POST(api,self.httpRequestNotFoundData)
         self.assertEqual(404, result)
 
     def test_InvalidJSON(self):
-        result = create_request(self.httpRequestInvalidJson)
+        result = create_POST(api,self.httpRequestInvalidJson)
         self.assertEqual(400, result)
 
 
