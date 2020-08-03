@@ -29,4 +29,7 @@ def get_exception(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API_KE
     except requests.exceptions.Timeout:
         raise ToolUnavailable
 
-    return r.json()
+    try:
+        return r.json()
+    except ValueError:
+        raise ToolUnavailable

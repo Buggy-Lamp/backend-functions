@@ -31,4 +31,7 @@ def get_availability(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API
     except requests.exceptions.Timeout:
         raise ToolUnavailable
 
-    return r.json()
+    try:
+        return r.json()
+    except ValueError:
+        raise ToolUnavailable
