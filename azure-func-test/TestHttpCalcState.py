@@ -1,5 +1,5 @@
 import unittest
-from RequestGeneratorUtil import create_POST
+from utilities.RequestGeneratorUtil import create_POST
 
 api = "http://localhost:7071/api/HttpCalcState"
 # http://localhost:7071/api/HttpCalcState/template-SmartHotel360

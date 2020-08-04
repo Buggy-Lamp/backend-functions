@@ -1,5 +1,5 @@
 import unittest
-from RequestGeneratorUtil import create_GETParam
+from utilities.RequestGeneratorUtil import create_GETParam
 
 class TestHttpCalcState(unittest.TestCase):
     api = "http://localhost:7071/api/HttpDeleteInstance"
@@ -7,9 +7,6 @@ class TestHttpCalcState(unittest.TestCase):
     # We can only unitTest invalid requests here as otherwise we will actively transform the database
     # resulting in an integration test.
     # even tho these tests also in some way shape or form interact with the database.
-
-
-    #!TODO wants it in url PARAM not json body.
 
     httpRequestData = {'project': 'template-SmartHotel360'}
     httpRequestDataLamp = {'lampid' : 'falseId'}

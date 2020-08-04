@@ -1,0 +1,49 @@
+import unittest
+from utilities.RequestGeneratorUtil import create_GETParam
+
+class TestHttpCalcState(unittest.TestCase):
+    api = "http://localhost:7071/api/HttpGetAvailability"
+
+    missingKey = {'api_name' : 'DEMO_APP'}
+    missingApi = {'api_key' : "DEMO_KEY"}
+    invalidKeyApiPair = {'api_name' : 'api123', 'api_key' : 'apiKey123' }
+    invalidName = {'api_name' : 'api123', 'api_key' : 'DEMO_KEY' }
+    invalidKey = {'api_name' : 'DEMO_APP', 'api_key' : 'apiKey123' }
+    invalidParam = {'faulty' : 'error123'}
+    noParams = {}
+
+    # TODO: Fix HTTP responses, all give 200 now. even for bad requests.
+    # TODO: Edit test-implementation accordingly.
+
+    def test_MissingKey(self):
+        result = create_GETParam(self.api, self.missingKey)
+        self.assertEqual(result, 400)
+
+    def test_MissingAPi(self):
+        result = create_GETParam(self.api, self.missingApi)
+        self.assertEqual(result, 400)
+
+    def test_invalidKeyApiPair(self):
+        result = create_GETParam(self.api, self.invalidKeyApiPair)
+        self.assertEqual(result, 400)
+
+    def test_invalidName(self):
+        result = create_GETParam(self.api, self.invalidName)
+        self.assertEqual(result, 400)
+
+    def test_invalidKey(self):
+        result = create_GETParam(self.api, self.invalidKey)
+        self.assertEqual(result, 400)
+
+    def test_invalidParams(self):
+        result = create_GETParam(self.api, self.invalidParam)
+        self.assertEqual(result, 400)
+
+    def test_noParams(self):
+        result = create_GETParam(self.api, self.noParams)
+        self.assertEqual(result, 400)
+
+
+#So it can be run from commandline
+if __name__ == '__main__':
+    unittest.main()
