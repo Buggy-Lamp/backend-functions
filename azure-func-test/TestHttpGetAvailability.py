@@ -11,6 +11,7 @@ class TestHttpCalcState(unittest.TestCase):
     invalidKey = {'api_name' : 'DEMO_APP', 'api_key' : 'apiKey123' }
     invalidParam = {'faulty' : 'error123'}
     noParams = {}
+    validPair = {'api_name' : 'DEMO_APP', 'api_key' : 'DEMO_KEY'}
 
     # TODO: Fix HTTP responses, all give 200 now. even for bad requests.
     # TODO: Edit test-implementation accordingly.
@@ -42,6 +43,10 @@ class TestHttpCalcState(unittest.TestCase):
     def test_noParams(self):
         result = create_GETParam(self.api, self.noParams)
         self.assertEqual(result, 400)
+
+    def test_validPair(self):
+        result = create_GETParam(self.api,self.validPair)
+        self.assertEqual(result,200)
 
 
 #So it can be run from commandline
