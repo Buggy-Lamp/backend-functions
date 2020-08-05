@@ -28,7 +28,8 @@ class TestHttpCalcState(unittest.TestCase):
 
     def test_InvalidDetails(self):
         result = create_GETParam(self.api,self.incorrectDetails)
-        self.assertEqual(result,400)
+        self.assertEqual(result,404)
+
 
 
 #So it can be run from commandline
