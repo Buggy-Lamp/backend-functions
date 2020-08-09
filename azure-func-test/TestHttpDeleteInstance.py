@@ -1,7 +1,7 @@
 import unittest
 from utilities.RequestGeneratorUtil import create_GETParam
 
-class TestHttpCalcState(unittest.TestCase):
+class TestHttpDeleteInstance(unittest.TestCase):
     api = "http://localhost:7071/api/HttpDeleteInstance"
 
     # We can only unitTest invalid requests here as otherwise we will actively transform the database

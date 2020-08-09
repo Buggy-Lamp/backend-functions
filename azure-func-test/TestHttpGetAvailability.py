@@ -1,7 +1,7 @@
 import unittest
 from utilities.RequestGeneratorUtil import create_GETParam
 
-class TestHttpCalcState(unittest.TestCase):
+class TestHttpGetAvailability(unittest.TestCase):
     api = "http://localhost:7071/api/HttpGetAvailability"
 
     missingKey = {'api_name' : 'DEMO_APP'}
