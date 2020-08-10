@@ -15,6 +15,7 @@ class TestHttpInsertLamp(unittest.TestCase):
     # 1 --> no JSON = 400
     # 2 invalid json = 400
     # 3 200. lamp added.
+    # 4 no request body
 
     def test_noJson(self):
         result = create_POST(self.api,self.noData)
