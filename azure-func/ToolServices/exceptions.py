@@ -11,3 +11,8 @@ class ProjectNotFound(Exception):
 class ToolUnavailable(Exception):
     """"Raised when a Tool is unavailable at the time"""
     pass
+
+
+class InvalidCredentials(Exception):
+    """"Raised when invalid credentials is provided"""
+    pass
