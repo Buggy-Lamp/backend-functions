@@ -1,3 +1,4 @@
+from uuid import UUID, uuid4
 from typing import Iterable
 
 
@@ -45,3 +46,7 @@ def parse_error(data: dict) -> dict:
         return data
 
     return data
+
+
+def generate_uuid() -> UUID:
+    return uuid4()
