@@ -2,12 +2,14 @@ import unittest
 
 import requests
 
+
 def create_request(payload):
     post = requests.post(url=api, json=payload)
     return post.status_code
 
-api = "http://localhost:7071/api/HttpCalcState"
+
 # http://localhost:7071/api/HttpCalcState/template-SmartHotel360
+api = "http://localhost:7071/api/HttpCalcState"
 
 
 class TestHttpCalcState(unittest.TestCase):
@@ -37,6 +39,6 @@ class TestHttpCalcState(unittest.TestCase):
         self.assertEqual(400, result)
 
 
-#So it can be run from commandline
+# So it can be run from commandline
 if __name__ == '__main__':
     unittest.main()
