@@ -14,9 +14,6 @@ class TestHttpGetAvailability(unittest.TestCase):
     noParams = {}
     validPair = {'api_name': 'DEMO_APP', 'api_key': 'DEMO_KEY'}
 
-    # TODO: Fix HTTP responses, all give 200 now. even for bad requests.
-    # TODO: Edit test-implementation accordingly.
-
     def test_MissingKey(self):
         result = create_get(self.api, self.missingKey)
         self.assertEqual(result, 400)
