@@ -1,5 +1,5 @@
 import unittest
-from utilities.RequestGeneratorUtil import create_GETParam
+from utilities.RequestGeneratorUtil import create_get
 
 
 class TestHttpGetExceptions(unittest.TestCase):
@@ -21,35 +21,35 @@ class TestHttpGetExceptions(unittest.TestCase):
     validPair = {'api_name': 'DEMO_APP', 'api_key': 'DEMO_KEY'}
 
     def test_MissingKey(self):
-        result = create_GETParam(self.api, self.missingKey)
+        result = create_get(self.api, self.missingKey)
         self.assertEqual(result, 400)
 
     def test_MissingAPi(self):
-        result = create_GETParam(self.api, self.missingApi)
+        result = create_get(self.api, self.missingApi)
         self.assertEqual(result, 400)
 
     def test_invalidKeyApiPair(self):
-        result = create_GETParam(self.api, self.invalidKeyApiPair)
-        self.assertEqual(result, 400)
+        result = create_get(self.api, self.invalidKeyApiPair)
+        self.assertEqual(result, 403)
 
     def test_invalidName(self):
-        result = create_GETParam(self.api, self.invalidName)
-        self.assertEqual(result, 400)
+        result = create_get(self.api, self.invalidName)
+        self.assertEqual(result, 403)
 
     def test_invalidKey(self):
-        result = create_GETParam(self.api, self.invalidKey)
-        self.assertEqual(result, 400)
+        result = create_get(self.api, self.invalidKey)
+        self.assertEqual(result, 403)
 
     def test_invalidParams(self):
-        result = create_GETParam(self.api, self.invalidParam)
+        result = create_get(self.api, self.invalidParam)
         self.assertEqual(result, 400)
 
     def test_noParams(self):
-        result = create_GETParam(self.api, self.noParams)
+        result = create_get(self.api, self.noParams)
         self.assertEqual(result, 400)
 
     def test_validPair(self):
-        result = create_GETParam(self.api, self.validPair)
+        result = create_get(self.api, self.validPair)
         self.assertEqual(result, 200)
 
 

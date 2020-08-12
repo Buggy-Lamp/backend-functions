@@ -1,5 +1,5 @@
 import unittest
-from utilities.RequestGeneratorUtil import create_GETParam
+from utilities.RequestGeneratorUtil import create_get
 
 
 class TestHttpGetState(unittest.TestCase):
@@ -16,19 +16,19 @@ class TestHttpGetState(unittest.TestCase):
     httpEscapeTest = {'project': 'template-Sm"""""artHotel360'}
 
     def test_noProjectid(self):
-        result = create_GETParam(self.api, self.httpMissingProjectId)
+        result = create_get(self.api, self.httpMissingProjectId)
         self.assertEqual(result, 404)
 
     def test_InvalidProjectId(self):
-        result = create_GETParam(self.api, self.httpInvalidProjectId)
+        result = create_get(self.api, self.httpInvalidProjectId)
         self.assertEqual(result, 404)
 
     def test_ValidProjectId(self):
-        result = create_GETParam(self.api, self.httpValidProjectId)
+        result = create_get(self.api, self.httpValidProjectId)
         self.assertEqual(result, 200)
 
     def test_EscapeString(self):
-        result = create_GETParam(self.api, self.httpEscapeTest)
+        result = create_get(self.api, self.httpEscapeTest)
         self.assertEqual(result, 400)
 
 

@@ -1,5 +1,5 @@
 import unittest
-from utilities.RequestGeneratorUtil import create_POST
+from utilities.RequestGeneratorUtil import create_post
 
 
 class TestHttpInsertLamp(unittest.TestCase):
@@ -16,19 +16,19 @@ class TestHttpInsertLamp(unittest.TestCase):
     # 4 no request body
 
     def test_noJson(self):
-        result = create_POST(self.api, self.noData)
+        result = create_post(self.api, self.noData)
         self.assertEqual(result, 400)
 
     def test_invalidJson(self):
-        result = create_POST(self.api, self.incorrectData)
+        result = create_post(self.api, self.incorrectData)
         self.assertEqual(result, 400)
 
     def test_CorrectData(self):
-        result = create_POST(self.api, self.correctData)
+        result = create_post(self.api, self.correctData)
         self.assertEqual(result, 200)
 
     def test_theNoBodyBody(self):
-        result = create_POST(self.api, "")
+        result = create_post(self.api, "")
         self.assertEqual(result, 400)
 
 

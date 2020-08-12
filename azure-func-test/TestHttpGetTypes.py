@@ -1,5 +1,5 @@
 import unittest
-from utilities.RequestGeneratorUtil import create_GETParam
+from utilities.RequestGeneratorUtil import create_get
 
 
 class TestHttpGetTypes(unittest.TestCase):
@@ -10,7 +10,7 @@ class TestHttpGetTypes(unittest.TestCase):
     Httpcheck = {}
 
     def test_TypesAvailible(self):
-        result = create_GETParam(self.api, self.Httpcheck)
+        result = create_get(self.api, self.Httpcheck)
         self.assertEqual(result, 200)
 
 

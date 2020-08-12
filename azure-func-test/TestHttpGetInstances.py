@@ -1,5 +1,5 @@
 import unittest
-from utilities.RequestGeneratorUtil import create_GETParam
+from utilities.RequestGeneratorUtil import create_get
 
 
 class TestHttpGetInstances(unittest.TestCase):
@@ -16,19 +16,19 @@ class TestHttpGetInstances(unittest.TestCase):
     httpValidInstanceAndProjectId = {'project': 'template-SmartHotel360', 'instance_name': 'JavaClient'}
 
     def test_NoProjectId(self):
-        result = create_GETParam(self.api, self.httpMissingProjectId)
+        result = create_get(self.api, self.httpMissingProjectId)
         self.assertEqual(result, 400)
 
     def test_InvalidProjectId(self):
-        result = create_GETParam(self.api, self.httpInvalidProjectId)
+        result = create_get(self.api, self.httpInvalidProjectId)
         self.assertEqual(result, 404)
 
     def test_allInstanceProject(self):
-        result = create_GETParam(self.api, self.httpValidProjectId)
+        result = create_get(self.api, self.httpValidProjectId)
         self.assertEqual(result, 200)
 
     def test_getOneInstance(self):
-        result = create_GETParam(self.api, self.httpValidInstanceAndProjectId)
+        result = create_get(self.api, self.httpValidInstanceAndProjectId)
         self.assertEqual(result, 200)
 
 
