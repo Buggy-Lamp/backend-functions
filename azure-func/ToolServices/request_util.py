@@ -9,6 +9,10 @@ def find_parameter(req: func.HttpRequest, parameter_name: str, default=None):
         except ValueError:
             pass
         else:
+            # If the supplied body is not a dict
+            if not hasattr(req_body, 'get'):
+                return default
+
             param = req_body.get(parameter_name) \
                 if req_body.get(parameter_name) is not None else param
 
