@@ -1,5 +1,5 @@
 import unittest
-from utilities.RequestGeneratorUtil import create_GETParam
+from .utilities.RequestGeneratorUtil import create_GETParam
 
 
 class TestHttpGetLampData(unittest.TestCase):
@@ -14,12 +14,15 @@ class TestHttpGetLampData(unittest.TestCase):
     httpRandomLampID = {'lampid': 'randomlampid'}
 
     httpFoundlampId = {'lampid': 'f427249f-61d7-4e05-a495-a64e28478af0'}
+
     def test_noLampId(self):
         result = create_GETParam(self.api, self.httpMissingLampID)
         self.assertEqual(result, 404)
+
     def test_LampIdNotFound(self):
         result = create_GETParam(self.api, self.httpRandomLampID)
         self.assertEqual(result, 404)
+
     def test_LampIdNotFound(self):
         result = create_GETParam(self.api, self.httpFoundlampId)
         self.assertEqual(result, 200)

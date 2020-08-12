@@ -1,17 +1,18 @@
 import unittest
-from utilities.RequestGeneratorUtil import create_GETParam
+from .utilities.RequestGeneratorUtil import create_GETParam
+
 
 class TestHttpGetAvailability(unittest.TestCase):
     api = "http://localhost:7071/api/HttpGetAvailability"
 
-    missingKey = {'api_name' : 'DEMO_APP'}
-    missingApi = {'api_key' : "DEMO_KEY"}
-    invalidKeyApiPair = {'api_name' : 'api123', 'api_key' : 'apiKey123' }
-    invalidName = {'api_name' : 'api123', 'api_key' : 'DEMO_KEY' }
-    invalidKey = {'api_name' : 'DEMO_APP', 'api_key' : 'apiKey123' }
-    invalidParam = {'faulty' : 'error123'}
+    missingKey = {'api_name': 'DEMO_APP'}
+    missingApi = {'api_key': "DEMO_KEY"}
+    invalidKeyApiPair = {'api_name': 'api123', 'api_key': 'apiKey123'}
+    invalidName = {'api_name': 'api123', 'api_key': 'DEMO_KEY'}
+    invalidKey = {'api_name': 'DEMO_APP', 'api_key': 'apiKey123'}
+    invalidParam = {'faulty': 'error123'}
     noParams = {}
-    validPair = {'api_name' : 'DEMO_APP', 'api_key' : 'DEMO_KEY'}
+    validPair = {'api_name': 'DEMO_APP', 'api_key': 'DEMO_KEY'}
 
     # TODO: Fix HTTP responses, all give 200 now. even for bad requests.
     # TODO: Edit test-implementation accordingly.
@@ -45,10 +46,10 @@ class TestHttpGetAvailability(unittest.TestCase):
         self.assertEqual(result, 400)
 
     def test_validPair(self):
-        result = create_GETParam(self.api,self.validPair)
-        self.assertEqual(result,200)
+        result = create_GETParam(self.api, self.validPair)
+        self.assertEqual(result, 200)
 
 
-#So it can be run from commandline
+# So it can be run from commandline
 if __name__ == '__main__':
     unittest.main()
