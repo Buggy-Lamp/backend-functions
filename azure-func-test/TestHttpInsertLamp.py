@@ -1,5 +1,5 @@
 import unittest
-from .utilities.RequestGeneratorUtil import create_POST
+from utilities.RequestGeneratorUtil import create_POST
 
 
 class TestHttpInsertLamp(unittest.TestCase):

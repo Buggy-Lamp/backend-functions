@@ -1,5 +1,5 @@
 import unittest
-from .utilities.RequestGeneratorUtil import create_GETParam
+from utilities.RequestGeneratorUtil import create_GETParam
 
 
 class TestHttpDeleteInstance(unittest.TestCase):
