@@ -19,4 +19,7 @@ def get_quality_gate(api_username: str, api_password: str, project_key: str) -> 
     except requests.exceptions.Timeout:
         raise ToolUnavailable
 
-    return r.json()
+    try:
+        return r.json()
+    except ValueError:
+        raise ToolUnavailable

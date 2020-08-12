@@ -1,8 +1,8 @@
 import unittest
 from utilities.RequestGeneratorUtil import create_POST
 
-api = "http://localhost:7071/api/HttpCalcState"
 # http://localhost:7071/api/HttpCalcState/template-SmartHotel360
+api = "http://localhost:7071/api/HttpCalcState"
 
 
 class TestHttpCalcState(unittest.TestCase):
@@ -16,22 +16,22 @@ class TestHttpCalcState(unittest.TestCase):
 
     def test_validProject(self):
         # need valid project
-        result = create_POST(api,self.httpRequestData)
+        result = create_POST(api, self.httpRequestData)
         self.assertEqual(200, result)
 
     def test_ProjectInvalidString(self):
-        result = create_POST(api,self.httpRequestFalseData)
+        result = create_POST(api, self.httpRequestFalseData)
         self.assertEqual(400, result)
 
     def test_ProjectNotFound(self):
-        result = create_POST(api,self.httpRequestNotFoundData)
+        result = create_POST(api, self.httpRequestNotFoundData)
         self.assertEqual(404, result)
 
     def test_InvalidJSON(self):
-        result = create_POST(api,self.httpRequestInvalidJson)
+        result = create_POST(api, self.httpRequestInvalidJson)
         self.assertEqual(400, result)
 
 
-#So it can be run from commandline
+# So it can be run from commandline
 if __name__ == '__main__':
     unittest.main()
