@@ -1,6 +1,6 @@
 import unittest
+from utilities.RequestGeneratorUtil import create_get
 
-from utilities.RequestGeneratorUtil import create_GETParam
 
 class TestHttpGetState(unittest.TestCase):
     api = "http://localhost:7071/api/HttpGetState"
@@ -14,18 +14,23 @@ class TestHttpGetState(unittest.TestCase):
     httpValidProjectId = {'project': 'template-SmartHotel360'}
 
     httpEscapeTest = {'project': 'template-Sm"""""artHotel360'}
+
     def test_noProjectid(self):
-        result = create_GETParam(self.api, self.httpMissingProjectId)
+        result = create_get(self.api, self.httpMissingProjectId)
         self.assertEqual(result, 404)
+
     def test_InvalidProjectId(self):
-        result = create_GETParam(self.api, self.httpInvalidProjectId)
+        result = create_get(self.api, self.httpInvalidProjectId)
         self.assertEqual(result, 404)
+
     def test_ValidProjectId(self):
-        result = create_GETParam(self.api,self.httpValidProjectId)
-        self.assertEqual(result,200)
+        result = create_get(self.api, self.httpValidProjectId)
+        self.assertEqual(result, 200)
+
     def test_EscapeString(self):
-        result = create_GETParam(self.api, self.httpEscapeTest)
+        result = create_get(self.api, self.httpEscapeTest)
         self.assertEqual(result, 400)
+
 
 if __name__ == '__main__':
     unittest.main()

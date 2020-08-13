@@ -3,7 +3,7 @@ import json
 import requests
 
 from ... import constants
-from ..exceptions import ToolUnavailable
+from ..exceptions import ToolUnavailable, InvalidCredentials
 
 
 def get_availability(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API_KEY,
@@ -31,4 +31,12 @@ def get_availability(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API
     except requests.exceptions.Timeout:
         raise ToolUnavailable
 
-    return r.json()
+    # Status code 404 is when the api_name is not valid
+    # Status code 403 is when the api_key is not valid
+    if r.status_code == 404 or r.status_code == 403:
+        raise InvalidCredentials
+
+    try:
+        return r.json()
+    except ValueError:
+        raise ToolUnavailable
