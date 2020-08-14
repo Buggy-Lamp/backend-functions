@@ -3,6 +3,7 @@ import requests
 
 def create_post(api, payload):
     post = requests.post(url=api, json=payload)
+    print(post.url)
     return post.status_code
 
 
