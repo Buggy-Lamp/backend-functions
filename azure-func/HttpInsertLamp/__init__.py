@@ -1,4 +1,5 @@
 import json
+import re
 from urllib.parse import urljoin
 
 import azure.functions as func
@@ -21,6 +22,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if project is None or mac_address is None:
         return func.HttpResponse(
             "The following parameters are required: `project` `mac`",
+            status_code=400
+        )
+
+    if not re.match(r'^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$', mac_address):
+        return func.HttpResponse(
+            "Your `mac` value is not valid",
             status_code=400
         )
 
