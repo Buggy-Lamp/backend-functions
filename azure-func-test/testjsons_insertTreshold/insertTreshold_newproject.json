@@ -1,0 +1,33 @@
+{
+   "project":"test",
+   "tools":[
+      {
+         "tool_name":"love",
+         "instances": [
+                {
+                    "instance_name": "nieuweinstancie",
+                    "api_name": "DEMO_APP",
+                    "api_key": "DEMO_KEY",
+                    "properties": [
+                        {
+                            "property_name": "exceptions",
+                            "active": false,
+                            "thresholds": [
+                                {
+                                    "min": 0,
+                                    "color": "green"
+                                },
+                                {
+                                    "min": 5,
+                                    "color": "orange"
+                                },
+                                {
+                                    "min": 20,
+                                    "color": "red"
+                                }
+                            ]
+                        }
+            ]
+      }
+   ]
+}

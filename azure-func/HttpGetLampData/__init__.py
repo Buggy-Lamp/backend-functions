@@ -28,8 +28,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     if not lampid:
         return func.HttpResponse(
-            "Please pass project on the query string or in the request body",
-            status_code=400
+            "Please pass a Lamp id in the get parameter or in the request body",
+            status_code=404
         )
 
 
@@ -39,7 +39,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     if len(states) == 0:
         return func.HttpResponse(
-            "Project not found",
+            "Lamp not found",
             status_code=404
         )
     result = {}
@@ -49,4 +49,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     result['url'] = urljoin(req.url,'HttpGetstate?code=hwa8MDSY6Jncf1BJjVLYERuLP1tGHdMejiG4aUA7FogBacdCRuQh1A==&project=' + project)
     result['mac']   = mac
 
-    return func.HttpResponse(json.dumps(result), mimetype=constants.HTTP_JSON_MIMETYPE)
+    return func.HttpResponse(json.dumps(result), mimetype=constants.HTTP_JSON_MIMETYPE,status_code = 200)

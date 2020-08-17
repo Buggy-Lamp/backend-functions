@@ -18,6 +18,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     project_id = request_util.find_parameter(req, 'project')
 
+
+    if not project_id:
+        return func.HttpResponse(
+            "Please pass a project id in the get parameter or in the request body",
+            status_code=404
+        )
     # Check if string contains escaping chars
     if '\'' in project_id or '"' in project_id or '\\' in project_id:
         return func.HttpResponse(

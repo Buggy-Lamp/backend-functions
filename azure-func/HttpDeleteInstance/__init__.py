@@ -25,7 +25,18 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             "Please pass lamp_id on the query string or in the request body",
             status_code=400
         )
+    # trying to delete it in the database
+    try:
+        states_container.delete_item(lamp_id, project)
+        return func.HttpResponse(
+            "Instance is correctly removed",
+            status_code=400
+        )
+    except:
+        return func.HttpResponse(
+            "This instance is not found",
+            status_code=404
+        )
 
-    states_container.delete_item(lamp_id, project)
 
-    return func.HttpResponse()
+
