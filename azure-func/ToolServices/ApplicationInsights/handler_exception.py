@@ -14,7 +14,8 @@ def get_exception(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API_KE
         constants.HEADER_AUTH_KEY: api_key
     }
 
-    # There is a bug where >= 1 top results to the whole collection
+    # There is a problem on Azure Application Insights where >= 1 top results to the whole collection
+    # This has no impact on our data flow
     data = {
         constants.REQ_TOP_KEY: '1',
         constants.REQ_COUNT_KEY: 'true',
