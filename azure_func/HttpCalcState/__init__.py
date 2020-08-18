@@ -32,8 +32,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             status_code=404
         )
 
-    state['id'] = state['project']
+    # container.upsert_item(body=state)
 
-    container.upsert_item(body=state)
-
-    return func.HttpResponse(json.dumps(state), mimetype=HTTP_JSON_MIMETYPE)
+    return func.HttpResponse(json.dumps(state.serialize()), mimetype=HTTP_JSON_MIMETYPE)

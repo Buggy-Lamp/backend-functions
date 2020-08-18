@@ -85,6 +85,12 @@ class Instance:
                 self.color = prop.color
                 self.color_weight = prop.color_weight
 
+    def append_prop(self, prop):
+        if self.properties is None:
+            self.properties = []
+
+        self.properties.append(prop)
+
     def serialize(self) -> dict:
         return {
             'name': self.name,
