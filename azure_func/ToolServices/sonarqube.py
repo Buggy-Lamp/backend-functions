@@ -1,20 +1,14 @@
-import logging
-
-from .util import find_color, parse_error, find_threshold
-from .exceptions import ToolUnavailable
-from .. import constants
 from .Sonarqube import get_quality_gate
+from .exceptions import ToolUnavailable
+from .util import find_threshold
+from ..Model import Tool, Instance, Property
 
 
-def single_instance(instance_setting) -> dict or None:
+def single_instance(instance_setting) -> Instance:
     quality_gate_settings = list(filter(lambda x: x['property_name'] == 'qualitygate',
                                         instance_setting['properties']))
 
-    instance_data = {
-        'color': 'gray',
-        'color_weight': -1,
-        'properties': {}
-    }
+    instance = Instance(name=instance_setting['instance_name'], properties=[])
 
     if len(quality_gate_settings) > 0:
         quality_gate_settings = quality_gate_settings[0]
@@ -22,32 +16,26 @@ def single_instance(instance_setting) -> dict or None:
         quality_gate_settings = None
 
     if quality_gate_settings:
-        _process_quality_gate(
+        quality_gate_prop = _process_quality_gate(
             instance_setting=instance_setting,
-            instance_data=instance_data,
             quality_gate_settings=quality_gate_settings
         )
+        instance.append_prop(quality_gate_prop)
 
-    if len(instance_data['properties']) == 0:
-        del instance_data['properties']
-
-    if 'properties' in instance_data:
-        color, color_weight = find_color(instance_data['properties'])
-        instance_data['color'] = color
-        instance_data['color_weight'] = color_weight
-
-    return instance_data
+    return instance
 
 
-def _process_quality_gate(instance_setting: dict, instance_data: dict, quality_gate_settings: dict):
+def _process_quality_gate(instance_setting: dict, quality_gate_settings: dict) -> Property:
+    prop = Property(name=quality_gate_settings['property_name'])
+
     try:
         quality_gate_data = get_quality_gate(
             instance_setting['api_name'], instance_setting['api_key'],
             instance_setting['api_project_id']
         )
     except ToolUnavailable:
-        instance_data['error'] = 'Tool is unavailable at the moment'
-        return
+        prop.error = 'Tool is unavailable at the moment'
+        return prop
 
     # 0 means OK; 1 means FAILED
     threshold_status = 0 if quality_gate_data['projectStatus']['status'] == 'OK' else 1
@@ -55,21 +43,25 @@ def _process_quality_gate(instance_setting: dict, instance_data: dict, quality_g
     # An multiplier of 2 is needed because the quality gate has only 2 thresholds instead of 3
     threshold_target = find_threshold(quality_gate_settings['thresholds'], threshold_status, multiplier=2)
 
-    instance_data['properties']['qualitygate'] = threshold_target
+    prop.found_value = threshold_status
+    prop.min_threshold = threshold_target['min']
+    prop.color = threshold_target['color']
+    prop.color_weight = threshold_target['color_weight']
+
+    return prop
 
 
-def process_sonarqube(settings) -> dict or None:
+def process_sonarqube(settings) -> Tool or None:
     if len(settings) == 0:
         return None
 
     settings = settings[0]
 
-    return_data = {}
+    instances = []
     for instance in settings['instances']:
-        return_data[instance['instance_name']] = single_instance(instance)
+        instances.append(single_instance(instance_setting=instance))
 
-    color, color_weight = find_color(return_data)
-    return_data['color'] = color
-    return_data['color_weight'] = color_weight
+    return_data = Tool(name='sonarqube', instances=instances)
+    return_data.process_tool_color()
 
     return return_data

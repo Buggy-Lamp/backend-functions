@@ -1,12 +1,12 @@
-from .util import find_threshold, find_color, parse_error
-from .exceptions import ToolUnavailable
-from .. import constants
 from .ApplicationInsights import get_availability
 from .ApplicationInsights import get_exception
+from .exceptions import ToolUnavailable
+from .util import find_threshold, parse_error
+from ..constants import RESP_COUNT_KEY
 from ..Model import Tool, Instance, Property
 
 
-def single_instance(instance_setting, show_all=False) -> Instance or None:
+def single_instance(instance_setting, show_all=False) -> Instance:
     exception_settings = list(filter(lambda x: x['property_name'] == 'exceptions',
                                      instance_setting['properties']))
     availability_settings = list(filter(lambda x: x['property_name'] == 'availability',
@@ -79,11 +79,11 @@ def _process_availability(instance_setting: dict, availability_settings: dict, s
     return prop
 
 
-def _process_prop_data(prop_data, exception_settings, prop):
+def _process_prop_data(prop_data, prop_settings, prop):
     if 'error' not in prop_data:
-        exception_len = prop_data[constants.RESP_COUNT_KEY]
+        exception_len = prop_data[RESP_COUNT_KEY]
 
-        threshold_target = find_threshold(exception_settings['thresholds'], exception_len)
+        threshold_target = find_threshold(prop_settings['thresholds'], exception_len)
         prop.found_value = exception_len
         prop.min_threshold = threshold_target['min']
         prop.color = threshold_target['color']
