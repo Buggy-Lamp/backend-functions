@@ -32,6 +32,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             status_code=404
         )
 
-    # container.upsert_item(body=state)
+    serialized_state = state.serialize()
 
-    return func.HttpResponse(json.dumps(state.serialize()), mimetype=HTTP_JSON_MIMETYPE)
+    container.upsert_item(body=serialized_state)
+
+    return func.HttpResponse(json.dumps(serialized_state), mimetype=HTTP_JSON_MIMETYPE)
