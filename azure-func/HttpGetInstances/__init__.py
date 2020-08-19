@@ -5,14 +5,12 @@ import azure.functions as func
 from azure.cosmos import CosmosClient
 
 from ..ToolServices import request_util
-from ..constants import DB_ENDPOINT, DB_KEY, DB_DATABASE_ID, DB_CONTAINER_ID, DB_STATES_CONTAINER_ID, \
+from ..constants import DB_STATES_CONTAINER_ID, \
     HTTP_JSON_MIMETYPE
+from .. import functions
 
-client = CosmosClient(DB_ENDPOINT, DB_KEY)
 
-database = client.get_database_client(DB_DATABASE_ID)
-container = database.get_container_client(DB_CONTAINER_ID)
-states_container = database.get_container_client(DB_STATES_CONTAINER_ID)
+states_container = functions.getContainer(DB_STATES_CONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -31,7 +29,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         if '\'' in instance_name or '"' in instance_name or '\\' in instance_name:
             return func.HttpResponse("Instance name is an invalid string", status_code=400)
 
-    settings = list(container.query_items(query=f"SELECT * FROM c WHERE "
+    settings = list(states_container.query_items(query=f"SELECT * FROM c WHERE "
                                                 f"c.project = '{project_id}'",
                                           enable_cross_partition_query=True))
 

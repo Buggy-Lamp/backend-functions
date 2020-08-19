@@ -8,11 +8,9 @@ from azure.cosmos import CosmosClient
 from urllib.parse import urljoin
 
 from .. import constants
+from .. import functions
 
-client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
-
-database = client.get_database_client(constants.DB_DATABASE_ID)
-states_container = database.get_container_client(constants.DB_LAMPCONTAINER_ID)
+states_container = functions.getContainer(constants.DB_LAMPCONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -46,7 +44,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     mac             = states[0]['mac']
     project         = states[0]['project']
 
-    result['url'] = urljoin(req.url,'HttpGetstate?code=hwa8MDSY6Jncf1BJjVLYERuLP1tGHdMejiG4aUA7FogBacdCRuQh1A==&project=' + project)
+    result['url'] = urljoin(req.url,constants.GetLampDataStatusUrl + project)
     result['mac']   = mac
 
     return func.HttpResponse(json.dumps(result), mimetype=constants.HTTP_JSON_MIMETYPE,status_code = 200)
