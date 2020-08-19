@@ -9,7 +9,7 @@ from .. import functions
 from .. import constants
 from ..ToolServices import request_util, util
 
-container = functions.getContainer(constants.DB_LAMPCONTAINER_ID)
+container = functions.get_container(constants.DB_LAMPCONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:

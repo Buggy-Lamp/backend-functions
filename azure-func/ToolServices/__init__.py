@@ -7,7 +7,7 @@ from ..constants import DB_CONTAINER_ID
 from .. import functions
 
 
-container = functions.getContainer(DB_CONTAINER_ID)
+container = functions.get_container(DB_CONTAINER_ID)
 
 
 def calc_state(project_id: str) -> dict:
