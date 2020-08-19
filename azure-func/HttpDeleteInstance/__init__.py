@@ -1,5 +1,6 @@
 import azure.functions as func
 from azure.cosmos import CosmosClient
+from azure.cosmos.exceptions import CosmosResourceNotFoundError
 
 from .. import constants
 from ..ToolServices import request_util
@@ -30,7 +31,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             "Instance is correctly removed",
             status_code=400
         )
-    except:
+    except CosmosResourceNotFoundError:
         return func.HttpResponse(
             "This instance is not found",
             status_code=404
