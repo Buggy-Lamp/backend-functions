@@ -1,6 +1,7 @@
 import uuid
-import json as jsonparser
+
 from azure.cosmos import CosmosClient
+
 from .constants import DB_KEY, DB_ENDPOINT, DB_DATABASE_ID
 
 

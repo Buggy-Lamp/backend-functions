@@ -2,8 +2,8 @@ from .ApplicationInsights import get_availability
 from .ApplicationInsights import get_exception
 from .exceptions import ToolUnavailable
 from .util import find_threshold, parse_error
-from ..constants import RESP_COUNT_KEY
 from ..Model import Tool, Instance, Property
+from ..constants import RESP_COUNT_KEY
 
 
 def single_instance(instance_setting, show_all=False) -> Instance:

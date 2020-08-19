@@ -1,5 +1,6 @@
 import traceback
 
+
 class InvalidProjectId(Exception):
     """Raised when the project_id is invalid"""
     message = "Couldn't find any project with the specified id."

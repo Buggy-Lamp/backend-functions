@@ -1,11 +1,7 @@
 import json
-import logging
+from urllib.parse import urljoin
 
 import azure.functions as func
-from azure.cosmos import CosmosClient
-
-
-from urllib.parse import urljoin
 
 from .. import constants
 from .. import functions
@@ -14,7 +10,6 @@ states_container = functions.get_container(constants.DB_LAMPCONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    
     lampid = req.params.get('lampid')
     if not lampid:
         try:
@@ -30,7 +25,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             status_code=404
         )
 
-
     states = list(states_container.query_items(query=f'SELECT c.mac, c.project FROM c WHERE '
                                                      f'c.id = \'{lampid}\'',
                                                enable_cross_partition_query=True))
@@ -41,10 +35,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             status_code=404
         )
     result = {}
-    mac             = states[0]['mac']
-    project         = states[0]['project']
+    mac = states[0]['mac']
+    project = states[0]['project']
 
-    result['url'] = urljoin(req.url,constants.GetLampDataStatusUrl + project)
-    result['mac']   = mac
+    result['url'] = urljoin(req.url, constants.GetLampDataStatusUrl + project)
+    result['mac'] = mac
 
-    return func.HttpResponse(json.dumps(result), mimetype=constants.HTTP_JSON_MIMETYPE,status_code = 200)
+    return func.HttpResponse(json.dumps(result), mimetype=constants.HTTP_JSON_MIMETYPE, status_code=200)

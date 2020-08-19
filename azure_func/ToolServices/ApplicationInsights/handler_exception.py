@@ -2,8 +2,8 @@ import json
 
 import requests
 
-from ... import constants
 from ..exceptions import ToolUnavailable, InvalidCredentials
+from ... import constants
 
 
 def get_exception(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API_KEY,

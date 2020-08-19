@@ -2,8 +2,8 @@ import json
 
 import requests
 
-from ... import constants
 from ..exceptions import ToolUnavailable
+from ... import constants
 
 
 def get_quality_gate(api_username: str, api_password: str, project_key: str) -> json:

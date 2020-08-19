@@ -1,13 +1,9 @@
-import logging
-
-import azure.functions as func
-from azure.cosmos import CosmosClient
-
-from .. import functions
-from .. import constants
-
 import json
 
+import azure.functions as func
+
+from .. import constants
+from .. import functions
 
 container = functions.get_container(constants.DB_ToolTypes_ID)
 

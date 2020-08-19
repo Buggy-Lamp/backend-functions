@@ -2,13 +2,10 @@ import json
 import logging
 
 import azure.functions as func
-from azure.cosmos import CosmosClient
+
 from .. import functions
 from ..ToolServices import calc_state, exceptions, request_util
 from ..constants import DB_STATES_CONTAINER_ID, HTTP_JSON_MIMETYPE
-
-
-
 
 container = functions.get_container(DB_STATES_CONTAINER_ID)
 

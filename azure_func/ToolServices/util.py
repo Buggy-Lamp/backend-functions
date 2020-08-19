@@ -1,5 +1,5 @@
-from uuid import UUID, uuid4
 from typing import Iterable
+from uuid import UUID, uuid4
 
 
 def find_threshold(thresholds: dict, target: int, multiplier=1) -> dict:

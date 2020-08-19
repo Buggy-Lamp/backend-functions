@@ -2,11 +2,9 @@ import datetime
 import logging
 
 import azure.functions as func
-from azure.cosmos import CosmosClient
 
 from .. import functions
 from ..constants import DB_CONTAINER_ID
-
 
 container = functions.get_container(DB_CONTAINER_ID)
 

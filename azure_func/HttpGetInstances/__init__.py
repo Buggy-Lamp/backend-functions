@@ -2,13 +2,11 @@ import json
 import logging
 
 import azure.functions as func
-from azure.cosmos import CosmosClient
 
+from .. import functions
 from ..ToolServices import request_util
 from ..constants import DB_STATES_CONTAINER_ID, \
     HTTP_JSON_MIMETYPE
-from .. import functions
-
 
 states_container = functions.get_container(DB_STATES_CONTAINER_ID)
 
@@ -30,8 +28,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             return func.HttpResponse("Instance name is an invalid string", status_code=400)
 
     settings = list(states_container.query_items(query=f"SELECT * FROM c WHERE "
-                                                f"c.project = '{project_id}'",
-                                          enable_cross_partition_query=True))
+                                                       f"c.project = '{project_id}'",
+                                                 enable_cross_partition_query=True))
 
     if len(settings) == 0:
         return func.HttpResponse("Project is not found", status_code=404)

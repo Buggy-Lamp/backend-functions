@@ -3,10 +3,9 @@ import re
 from urllib.parse import urljoin
 
 import azure.functions as func
-from azure.cosmos import CosmosClient
 
-from .. import functions
 from .. import constants
+from .. import functions
 from ..ToolServices import request_util, util
 
 container = functions.get_container(constants.DB_LAMPCONTAINER_ID)

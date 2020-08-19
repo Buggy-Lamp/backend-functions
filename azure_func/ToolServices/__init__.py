@@ -1,12 +1,8 @@
-from azure.cosmos import CosmosClient
-
 from . import application_insights, sonarqube, util
 from .exceptions import *
+from .. import functions
 from ..Model import Project
 from ..constants import DB_CONTAINER_ID
-
-from .. import functions
-
 
 container = functions.get_container(DB_CONTAINER_ID)
 

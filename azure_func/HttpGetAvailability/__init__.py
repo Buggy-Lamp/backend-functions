@@ -4,7 +4,7 @@ import logging
 import azure.functions as func
 
 from ..ToolServices import ApplicationInsights, exceptions, request_util
-from ..constants import BASE_URL, HTTP_JSON_MIMETYPE, APP_INSIGHTS_NAME, API_KEY
+from ..constants import BASE_URL, HTTP_JSON_MIMETYPE
 
 AVAILABILITY_URL = f'{BASE_URL}/events/availabilityResults'
 

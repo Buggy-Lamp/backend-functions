@@ -1,10 +1,9 @@
 import azure.functions as func
-from azure.cosmos import CosmosClient
 from azure.cosmos.exceptions import CosmosResourceNotFoundError
 
 from .. import constants
-from ..ToolServices import request_util
 from .. import functions
+from ..ToolServices import request_util
 
 states_container = functions.get_container(constants.DB_LAMPCONTAINER_ID)
 
@@ -36,6 +35,3 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             "This instance is not found",
             status_code=404
         )
-
-
-

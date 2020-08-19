@@ -1,9 +1,8 @@
 import json
 
-from ... import constants
-
 from .handler_availability import get_availability as internal_get_availability
 from .handler_exception import get_exception as internal_get_exception
+from ... import constants
 
 
 def get_availability(api_name=constants.APP_INSIGHTS_NAME, api_key=constants.API_KEY,

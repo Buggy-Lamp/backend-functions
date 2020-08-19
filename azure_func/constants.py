@@ -26,5 +26,3 @@ HTTP_JSON_MIMETYPE = 'application/json'
 HTTP_TIMEOUT = 3
 
 GetLampDataStatusUrl = 'HttpGetstate?code=hwa8MDSY6Jncf1BJjVLYERuLP1tGHdMejiG4aUA7FogBacdCRuQh1A==&project='
-
-
