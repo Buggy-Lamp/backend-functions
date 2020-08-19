@@ -29,7 +29,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         if '\'' in instance_name or '"' in instance_name or '\\' in instance_name:
             return func.HttpResponse("Instance name is an invalid string", status_code=400)
 
-    settings = list(container.query_items(query=f"SELECT * FROM c WHERE "
+    settings = list(states_container.query_items(query=f"SELECT * FROM c WHERE "
                                                 f"c.project = '{project_id}'",
                                           enable_cross_partition_query=True))
 
