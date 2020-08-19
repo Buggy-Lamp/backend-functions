@@ -10,7 +10,7 @@ from ..constants import DB_STATES_CONTAINER_ID, HTTP_JSON_MIMETYPE
 
 
 
-container = functions.getContainer(DB_STATES_CONTAINER_ID)
+container = functions.get_container(DB_STATES_CONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:

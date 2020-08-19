@@ -8,7 +8,7 @@ from .. import functions
 from ..constants import DB_CONTAINER_ID
 
 
-container = functions.getContainer(DB_CONTAINER_ID)
+container = functions.get_container(DB_CONTAINER_ID)
 
 
 def main(statetimer: func.TimerRequest) -> None:

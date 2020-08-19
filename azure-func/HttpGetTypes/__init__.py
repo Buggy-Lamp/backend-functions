@@ -9,7 +9,7 @@ from .. import constants
 import json
 
 
-container = functions.getContainer(constants.DB_ToolTypes_ID)
+container = functions.get_container(constants.DB_ToolTypes_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:

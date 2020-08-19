@@ -10,7 +10,7 @@ from ..constants import DB_STATES_CONTAINER_ID, \
 from .. import functions
 
 
-states_container = functions.getContainer(DB_STATES_CONTAINER_ID)
+states_container = functions.get_container(DB_STATES_CONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:

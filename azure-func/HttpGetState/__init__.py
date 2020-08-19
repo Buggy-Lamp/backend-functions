@@ -8,7 +8,7 @@ from .. import constants
 from .. import functions
 from ..ToolServices import request_util
 
-states_container = functions.getContainer(constants.DB_STATES_CONTAINER_ID)
+states_container = functions.get_container(constants.DB_STATES_CONTAINER_ID)
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')

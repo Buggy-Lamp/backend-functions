@@ -6,7 +6,7 @@ from .. import constants
 from ..ToolServices import request_util
 from .. import functions
 
-states_container = functions.getContainer(constants.DB_LAMPCONTAINER_ID)
+states_container = functions.get_container(constants.DB_LAMPCONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
