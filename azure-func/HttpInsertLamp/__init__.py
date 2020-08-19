@@ -5,13 +5,11 @@ from urllib.parse import urljoin
 import azure.functions as func
 from azure.cosmos import CosmosClient
 
+from .. import functions
 from .. import constants
 from ..ToolServices import request_util, util
 
-client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
-
-database = client.get_database_client(constants.DB_DATABASE_ID)
-container = database.get_container_client(constants.DB_LAMPCONTAINER_ID)
+container = functions.getContainer(constants.DB_LAMPCONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:

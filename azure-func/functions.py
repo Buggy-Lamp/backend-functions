@@ -1,11 +1,17 @@
 import uuid
 import json as jsonparser
+from azure.cosmos import CosmosClient
+from .constants import DB_KEY, DB_ENDPOINT , DB_DATABASE_ID
 
 
 def generateid(req_body):
     req_body['id'] = str(uuid.uuid4())
     return req_body
-
+def getContainer(Containername):
+    client = CosmosClient(DB_ENDPOINT,DB_KEY)
+    database = client.get_database_client(DB_DATABASE_ID)
+    container = database.get_container_client(Containername)
+    return container
 
 def update(container, requestinfo):
     project = requestinfo['project']

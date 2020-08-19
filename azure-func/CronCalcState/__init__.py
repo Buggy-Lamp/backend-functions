@@ -4,13 +4,11 @@ import logging
 import azure.functions as func
 from azure.cosmos import CosmosClient
 
-from ..constants import DB_ENDPOINT, DB_KEY, DB_DATABASE_ID, DB_CONTAINER_ID
+from .. import functions
+from ..constants import DB_CONTAINER_ID
 
 
-client = CosmosClient(DB_ENDPOINT, DB_KEY)
-
-database = client.get_database_client(DB_DATABASE_ID)
-container = database.get_container_client(DB_CONTAINER_ID)
+container = functions.getContainer(DB_CONTAINER_ID)
 
 
 def main(statetimer: func.TimerRequest) -> None:

@@ -3,11 +3,9 @@ from azure.cosmos import CosmosClient
 
 from .. import constants
 from ..ToolServices import request_util
+from .. import functions
 
-client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
-
-database = client.get_database_client(constants.DB_DATABASE_ID)
-states_container = database.get_container_client(constants.DB_LAMPCONTAINER_ID)
+states_container = functions.getContainer(constants.DB_LAMPCONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
