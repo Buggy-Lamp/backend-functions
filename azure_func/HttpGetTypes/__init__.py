@@ -3,15 +3,13 @@ import logging
 import azure.functions as func
 from azure.cosmos import CosmosClient
 
-from .. import family
+from .. import functions
 from .. import constants
 
 import json
 
-client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
 
-database = client.get_database_client(constants.DB_DATABASE_ID)
-container = database.get_container_client(constants.DB_ToolTypes_ID)
+container = functions.get_container(constants.DB_ToolTypes_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:

@@ -5,13 +5,10 @@ import azure.functions as func
 from azure.cosmos import CosmosClient
 
 from .. import constants
+from .. import functions
 from ..ToolServices import request_util
 
-client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
-
-database = client.get_database_client(constants.DB_DATABASE_ID)
-states_container = database.get_container_client(constants.DB_STATES_CONTAINER_ID)
-
+states_container = functions.get_container(constants.DB_STATES_CONTAINER_ID)
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')

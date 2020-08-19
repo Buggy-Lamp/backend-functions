@@ -7,7 +7,7 @@ class TestHttpInsertLamp(unittest.TestCase):
 
     noData = {}
     incorrectData = {"invalid": "FF:FF:FF:FF:FF:FF"}
-    correctData = {"mac": "FF:FF:FF:FF:FF:FF"}
+    correctData = {"project" : "template-SmartHotel360","mac": "FF:FF:FF:FF:FF:FF"}
 
     # scenarios base
     # 1 --> no JSON = 400

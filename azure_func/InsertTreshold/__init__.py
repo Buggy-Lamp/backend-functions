@@ -4,20 +4,17 @@ import logging
 import azure.functions as func
 from azure.cosmos import CosmosClient
 
-from .. import family
+from .. import functions
 from .. import constants
 
-client = CosmosClient(constants.DB_ENDPOINT, constants.DB_KEY)
-
-database = client.get_database_client(constants.DB_DATABASE_ID)
-container = database.get_container_client(constants.DB_CONTAINER_ID)
+container = functions.get_container(constants.DB_CONTAINER_ID)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     req_body        = req.get_json()
     # try:
-    result = family.update(container,req_body)
+    result = functions.update(container, req_body)
     # result = container.create_item(body=req_body)
     # except:
     #     result = f"The id is already in use or database error "
